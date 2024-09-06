@@ -36,7 +36,27 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/app-e2e/**/*"]
+      "exclude": ["apps/app-e2e/**/*", "apps/api-e2e/**/*"]
     }
-  ]
+  ],
+  "targetDefaults": {
+    "@angular-devkit/build-angular:browser": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "e2eTestRunner": "none",
+      "linter": "eslint",
+      "style": "css",
+      "unitTestRunner": "jest"
+    }
+  }
 }
