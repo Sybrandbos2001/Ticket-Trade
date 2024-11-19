@@ -1,0 +1,26 @@
+{
+  "name": "ticket-trade-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ticket-trade-api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "ticket-trade-api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "ticket-trade-api:build:development"
+        },
+        "production": {
+          "buildTarget": "ticket-trade-api:build:production"
+        }
+      }
+    }
+  }
+}
