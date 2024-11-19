@@ -30,8 +30,12 @@ jobs:
     # 5. Test all projects
       - name: Test all projects
         run: npx nx run-many --target=test --all
+        
+    # 6. Copy Procfile to dist folder
+      - name: Copy Procfile to dist folder
+        run: cp Procfile dist/apps/ticket-trade-api/
     
-    # 6. Deploy Backend to Heroku
+    # 7. Deploy Backend to Heroku
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
@@ -39,4 +43,3 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: "dist/apps/ticket-trade-api"
-          procfile: "web: node main.js"

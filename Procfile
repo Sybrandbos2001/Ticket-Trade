@@ -1,1 +1,1 @@
-web: node dist/apps/ticket-trade-api/main.js
+web: node main.js
