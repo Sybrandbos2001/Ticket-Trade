@@ -82,7 +82,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install
 
-      - name: Run E2E tests
+      - name: Run E2E tests on production site
         env:
           BASE_URL: ${{ secrets.FRONTEND_PRODUCTION_URL }}
         run: npx nx e2e ticket-trade-app-e2e
