@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/apps/ticket-trade-api/main.js",
+    "start": "node main.js",
     "build:all": "npx nx run-many --target=build --all --prod",
     "build:backend": "npx nx build ticket-trade-api --prod",
     "build:frontend": "npx nx build ticket-trade-app --prod",
@@ -11,8 +11,7 @@
     "test:backend": "npx nx test ticket-trade-api",
     "test:frontend": "npx nx test ticket-trade-app",
     "serve:backend": "npx nx serve ticket-trade-api",
-    "serve:frontend": "npx nx serve ticket-trade-app",
-    "postinstall": "npm install -g nx && npm install"
+    "serve:frontend": "npx nx serve ticket-trade-app"
   },
   "private": true,
   "dependencies": {
