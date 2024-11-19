@@ -28,10 +28,6 @@ jobs:
       - name: Build all projects
         run: npx nx run-many --target=build --all --configuration=production
     
-    # 5. Verify build output
-      - name: Verify build folder contents
-        run: ls -la dist/apps/ticket-trade-api
-    
     # 6. Prepare Heroku Deployment
       - name: Prepare Heroku Deployment
         run: |
@@ -43,20 +39,16 @@ jobs:
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
     
-    # 8. Login to Heroku
-      - name: Login to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku auth:token
-    
     # 9. Deploy to Heroku
       - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           cd dist/apps/ticket-trade-api
           git init
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
           git add .
           git commit -m "Deploying to Heroku"
           git push --force heroku master
