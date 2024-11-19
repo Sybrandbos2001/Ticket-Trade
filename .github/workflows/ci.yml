@@ -86,3 +86,8 @@ jobs:
         env:
           BASE_URL: ${{ secrets.FRONTEND_PRODUCTION_URL }}
         run: npx nx e2e ticket-trade-app-e2e
+        
+      - name: Run E2E tests on production API
+        env:
+          API_URL: ${{ secrets.API_PRODUCTION_URL }}
+        run: npx nx e2e ticket-trade-api-e2e
