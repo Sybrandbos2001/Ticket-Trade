@@ -1,4 +1,4 @@
-name: Deploy to Heroku
+name: Build, Test and Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - release
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-22.04
     steps:
     # 1. Checkout repository
