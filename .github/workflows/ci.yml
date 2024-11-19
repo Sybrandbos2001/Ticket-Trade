@@ -49,4 +49,4 @@ jobs:
       - name: Deploy subfolder to Heroku
         run: |
           git checkout release
-          git subtree push --prefix dist/apps/ticket-trade-api heroku main --force
+          git subtree push --prefix=dist/apps/ticket-trade-api heroku main
