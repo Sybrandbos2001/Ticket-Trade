@@ -32,18 +32,29 @@ jobs:
       - name: Verify build folder contents
         run: ls -la dist/apps/ticket-trade-api
     
-    # 6. Set up Heroku CLI
+    # 6. Prepare Heroku Deployment
+      - name: Prepare Heroku Deployment
+        run: |
+          cd dist/apps/ticket-trade-api
+          echo "web: node main.js" > Procfile
+
+    # 7. Set up Heroku CLI
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
     
-    # 7. Login to Heroku
+    # 8. Login to Heroku
       - name: Login to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku auth:token
     
-    # 8. Deploy the subfolder
-      - name: Deploy subfolder to Heroku
+    # 9. Deploy to Heroku
+      - name: Deploy to Heroku
         run: |
-          git subtree split --prefix dist/apps/ticket-trade-api release | xargs -I {} git push heroku {}:main
+          cd dist/apps/ticket-trade-api
+          git init
+          git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          git add .
+          git commit -m "Deploying to Heroku"
+          git push --force heroku master
