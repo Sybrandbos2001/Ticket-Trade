@@ -48,7 +48,7 @@ jobs:
           git init
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+          git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
           git add .
           git commit -m "Deploying to Heroku"
           git push --force heroku master
