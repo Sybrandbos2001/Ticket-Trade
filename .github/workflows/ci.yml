@@ -1,39 +1,69 @@
-name: CI
+name: CI/CD Workflow for NX Projects
 
 on:
   push:
     branches:
-      - master
-  pull_request:
-
-permissions:
-  actions: read
-  contents: read
+      - release
 
 jobs:
-  main:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 0
+          node-version: 22.x
 
-      # This enables task distribution via Nx Cloud
-      # Run this command as early as possible, before dependencies are installed
-      # Learn more at https://nx.dev/ci/reference/nx-cloud-cli#npx-nxcloud-startcirun
-      # Uncomment this line to enable task distribution
-      # - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      - name: Install dependencies
+        run: npm install
 
-      # Cache node_modules
-      - uses: actions/setup-node@v4
+      - name: Build all projects
+        run: npx nx run-many --target=build --all --prod
+
+      - name: Test all projects
+        run: npx nx run-many --target=test --all
+
+  deploy-backend:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22.x
 
-      - run: npm ci --legacy-peer-deps
-      - uses: nrwl/nx-set-shas@v4
+      - name: Deploy to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          npm install -g heroku
+          heroku container:login
+          heroku container:push web --app $HEROKU_APP_NAME
+          heroku container:release web --app $HEROKU_APP_NAME
 
-      # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
-      # - run: npx nx-cloud record -- echo Hello World
-      # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
-      - run: npx nx affected -t lint test build
+  deploy-frontend:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.x
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --build-directory=dist/apps/ticket-trade-app
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
