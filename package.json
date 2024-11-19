@@ -10,7 +10,7 @@
     "test:backend": "npx nx test ticket-trade-api",
     "test:frontend": "npx nx test ticket-trade-app",
     "serve:backend": "npx nx serve ticket-trade-api",
-    "serve:frontend": "npx nx serve ticket-trade-app",
+    "serve:frontend": "npx nx serve ticket-trade-app"
   },
   "private": true,
   "dependencies": {
