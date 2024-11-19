@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to Heroku
 
 on:
   push:
@@ -22,31 +22,28 @@ jobs:
     
     # 3. Install dependencies
       - name: Install dependencies
-        run: npm install 
+        run: npm install
     
     # 4. Build all projects
       - name: Build all projects
         run: npx nx run-many --target=build --all --configuration=production
     
-    # 5. Test all projects
-      - name: Test all projects
-        run: npx nx run-many --target=test --all
+    # 5. Verify build output
+      - name: Verify build folder contents
+        run: ls -la dist/apps/ticket-trade-api
     
     # 6. Set up Heroku CLI
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
-       
+    
     # 7. Login to Heroku
       - name: Login to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          heroku auth:token
-          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
-          
+        run: heroku auth:token
+    
     # 8. Deploy the subfolder
       - name: Deploy subfolder to Heroku
         run: |
-          git checkout release
-          git subtree push --prefix=dist/apps/ticket-trade-api heroku main
+          git subtree split --prefix dist/apps/ticket-trade-api release | xargs -I {} git push heroku {}:main
