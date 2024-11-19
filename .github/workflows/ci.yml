@@ -1,4 +1,4 @@
-name: CI/CD Workflow for NX Projects
+name: Deploy
 
 on:
   push:
@@ -6,47 +6,35 @@ on:
       - release
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-22.04
     steps:
-      # 1. Checkout code
+    # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      # 2. Set up Node.js
+        
+    # 2. Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.x
-
-      # 3. Install dependencies
+          node-version: 20.x       
+    
+    # 3. Install dependencies
       - name: Install dependencies
-        run: npm install
-
-      # 4. Build all projects
+        run: npm install    
+       
+    # 4. Build all projects
       - name: Build all projects
         run: npx nx run-many --target=build --all --prod
-
-      # 5. Test all projects
+    
+    # 5. Test all projects
       - name: Test all projects
         run: npx nx run-many --target=test --all
-
-      # 6. Deploy Backend to Heroku
+    
+    # 6. Deploy Backend to Heroku
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-
-      # 7. Install Railway CLI
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
-
-      # 8. Deploy Frontend to Railway
-      - name: Deploy to Railway
-        run: railway up --service ticket-trade-app
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
