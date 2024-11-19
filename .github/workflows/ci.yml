@@ -38,15 +38,19 @@ jobs:
         with:
           node-version: 22.x
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build backend project
+        run: npx nx build ticket-trade-api --prod
+
       - name: Deploy to Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-        run: |
-          npm install -g heroku
-          heroku container:login
-          heroku container:push web --app $HEROKU_APP_NAME
-          heroku container:release web --app $HEROKU_APP_NAME
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "dist/apps/ticket-trade-api"
 
   deploy-frontend:
     needs: build-and-test
@@ -60,10 +64,10 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: Install Railway CLI
-        run: npm install -g @railway/cli
+      - name: Install Railway
+        run: npm i -g @railway/cli
 
-      - name: Deploy to Railway
-        run: railway up --build-directory=dist/apps/ticket-trade-app
+      - name: Deploy
+        run: railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
