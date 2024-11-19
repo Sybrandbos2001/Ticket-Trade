@@ -54,6 +54,8 @@ jobs:
         run: |
           cd dist/apps/ticket-trade-api
           git init
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
           git add .
           git commit -m "Deploying to Heroku"
