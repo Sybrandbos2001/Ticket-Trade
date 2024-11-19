@@ -24,9 +24,13 @@ jobs:
       - name: Install dependencies
         run: npm install
     
-    # 4. Build all projects
-      - name: Build all projects
+    # 4. Build front-end and back-end
+      - name: Build projects
         run: npx nx run-many --target=build --all --configuration=production
+        
+    # 5. Test front-end and back-end
+      - name: Test projects
+        run: npx nx run-many --target=test --all
     
     # 6. Prepare Heroku Deployment
       - name: Prepare Heroku Deployment
