@@ -1,38 +1,33 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConcertController } from '../concert/concert.controller';
-import { GenreController } from '../genre/genre.controller';
-import { LocationController } from '../location/location.controller';
-import { TicketController } from '../ticket/ticket.controller';
-import { UserController } from '../user/user.controller';
-import { ArtistService } from '../artist/artist.service';
-import { ArtistController } from '../artist/artist.controller';
-import { ConcertService } from '../concert/concert.service';
-import { GenreService } from '../genre/genre.service';
-import { LocationService } from '../location/location.service';
-import { TicketService } from '../ticket/ticket.service';
-import { UserService } from '../user/user.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+
+import { ArtistModule } from '../artist/artist.module';
+import { ConcertModule } from '../concert/concert.module';
+import { GenreModule } from '../genre/genre.module';
+import { LocationModule } from '../location/location.module';
+import { TicketModule } from '../ticket/ticket.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [],
-  controllers: [
-    AppController,
-    ArtistController,
-    ConcertController,
-    GenreController,
-    LocationController,
-    TicketController,
-    UserController
+  imports: [
+    // Load environment variables
+    ConfigModule.forRoot({ envFilePath: `.env` }),
+    
+    // Database connection
+    MongooseModule.forRoot(process.env.MONGO_URL),
+    
+    // Feature modules
+    ArtistModule,
+    ConcertModule,
+    GenreModule,
+    LocationModule,
+    TicketModule,
+    UserModule,
   ],
-  providers: [
-    AppService,
-    ArtistService,
-    ConcertService,
-    GenreService,
-    LocationService,
-    TicketService,
-    UserService
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
