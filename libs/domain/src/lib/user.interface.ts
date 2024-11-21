@@ -9,4 +9,5 @@ export interface IUser {
     email: string;
     password: string;
     tickets: ITicket[];
+    following: string[];
 }

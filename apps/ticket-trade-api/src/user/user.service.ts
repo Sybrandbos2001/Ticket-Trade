@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException,UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException,UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -26,7 +26,7 @@ export class UserService {
       const { password, ...userWithoutPassword } = newUser.toObject();
       return userWithoutPassword;
     } catch (error) {
-      console.log(error);
+      console.error(error);
 
       if (error.code === 11000) {
         // Duplicate key error (E11000)
@@ -34,7 +34,6 @@ export class UserService {
           `User with the same ${Object.keys(error.keyValue)[0]} already exists`
         );
       }
-      throw error;
     }
   }
 
@@ -42,17 +41,17 @@ export class UserService {
     try {
       return await this.userModel.find().select('-password');
     } catch (error) {
-      console.log(error);
-      throw error;
+      console.error(error);
     }
   }
 
   async findOne(id: string) {
     try {
-      return await this.userModel.findById(id).select('-password');
+      const user = await this.userModel.findById(id).select('-password');
+      return user;
     } catch (error) {
-      console.log(error);
-      throw error;
+      console.error(error.message);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
   }
 
@@ -76,7 +75,6 @@ export class UserService {
           `User with the same ${Object.keys(error.keyValue)[0]} already exists`
         );
       }
-      throw error;
     }
   }
 
@@ -106,7 +104,14 @@ export class UserService {
       }
     } catch (error) {
       console.error(error);
-      throw error;
     }
   }
+
+  async followUser(currentUserId: string, userId: string) {
+    await this.userModel.updateOne(
+        { _id: currentUserId },
+        { $addToSet: { following: userId } }
+    );
+  }
+
 }

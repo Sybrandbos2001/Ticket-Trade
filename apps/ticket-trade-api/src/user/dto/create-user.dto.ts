@@ -3,6 +3,7 @@ import { TicketSchema } from '../../ticket/entities/ticket.entity';
 import { Prop } from '@nestjs/mongoose';
 import { ITicket, IUser } from '@ticket-trade/domain';
 import { ApiProperty } from '@nestjs/swagger';
+import mongoose from 'mongoose';
 
 export class CreateUserDto implements IUser {
     
@@ -47,4 +48,7 @@ export class CreateUserDto implements IUser {
 
     @Prop({ type: [TicketSchema], default: [] }) // Automatically set to an empty array for tickets
     tickets: ITicket[];
+
+    @Prop({ type: [mongoose.Schema.Types.ObjectId], default: [] }) // Automatically set to an empty array for tickets
+    following: string[];
 }

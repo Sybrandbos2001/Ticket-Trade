@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Req, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,7 +6,7 @@ import { User } from './entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('user')
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -73,6 +73,28 @@ export class UserController {
     await this.userService.remove(id);
     return {
       message: 'User deleted successfully',
+    };
+  }
+
+  @Post(':id/follow')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Follow user by ID' })
+  @ApiResponse({ status: 201, description: 'User has been successfully followed' })
+  async followUser(@Param('id') userId: string, @Req() req) {
+    const currentUserId = req.user.id; 
+    
+    // Check if user to follow is not the same as the current user
+    if (currentUserId === userId) {
+        throw new BadRequestException('You can not follow yourself');
+    }
+
+    // Check if user to follow exists
+    await this.userService.findOne(userId);
+
+    // Follow user
+    await this.userService.followUser(currentUserId, userId);
+    return {
+      message: 'User has been successfully followed',
     };
   }
 }
