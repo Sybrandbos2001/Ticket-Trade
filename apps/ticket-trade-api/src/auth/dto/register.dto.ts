@@ -1,11 +1,11 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, IsStrongPassword } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsStrongPassword } from 'class-validator';
 import { TicketSchema } from '../../ticket/entities/ticket.entity';
 import { Prop } from '@nestjs/mongoose';
-import { ITicket, IUser } from '@ticket-trade/domain';
+import { ITicket, IUser, Role } from '@ticket-trade/domain';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export class CreateUserDto implements IUser {
+export class RegisterDto implements IUser {
     
     // DB is responsible for ID
 
@@ -45,6 +45,11 @@ export class CreateUserDto implements IUser {
         minSymbols: 1
       })
     password: string;
+
+    @ApiProperty({ example: 'user', description: 'Role of user', default: Role.USER }) // Default role is USER
+    @IsOptional()
+    @IsEnum(Role, { message: 'Role must be either user or admin' })
+    role: Role;
 
     @Prop({ type: [TicketSchema], default: [] }) // Automatically set to an empty array for tickets
     tickets: ITicket[];

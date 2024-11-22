@@ -7,4 +7,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/domain',
+  passWithNoTests: true, // This ensures Jest exits with success even if no tests are found
 };
