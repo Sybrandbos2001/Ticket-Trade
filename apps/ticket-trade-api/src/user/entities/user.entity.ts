@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Ticket, TicketSchema } from '../../ticket/entities/ticket.entity';
-import { IUser } from '@ticket-trade/domain';
+import { IUser, Role } from '@ticket-trade/domain';
 
 
 export type UserDocument = User & Document;
@@ -28,6 +28,9 @@ export class User extends Document implements IUser {
 
     @Prop({ required: true })
     password: string;
+
+    @Prop({ type: String, enum: Role,  default: Role.USER }) // Default role is USER
+    role: Role;
     
     @Prop({ type: [TicketSchema], default: [] }) // Array of tickets for quick querying
     tickets: Ticket[];

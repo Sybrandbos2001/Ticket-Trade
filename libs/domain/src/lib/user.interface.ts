@@ -1,3 +1,4 @@
+import { Role } from "./role.enum";
 import { ITicket } from "./ticket.interface";
 
 export interface IUser {
@@ -10,4 +11,5 @@ export interface IUser {
     password: string;
     tickets: ITicket[];
     following: string[];
+    role: Role;
 }

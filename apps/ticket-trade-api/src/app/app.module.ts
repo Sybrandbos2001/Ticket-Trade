@@ -10,11 +10,12 @@ import { GenreModule } from '../genre/genre.module';
 import { LocationModule } from '../location/location.module';
 import { TicketModule } from '../ticket/ticket.module';
 import { UserModule } from '../user/user.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    // Load environment variables
-    ConfigModule.forRoot({ envFilePath: `.env` }),
+    // Load environment variables and make them available globally
+    ConfigModule.forRoot({ envFilePath: `.env`, isGlobal: true }),
     
     // Database connection
     MongooseModule.forRoot(process.env.MONGO_URL),
@@ -26,6 +27,7 @@ import { UserModule } from '../user/user.module';
     LocationModule,
     TicketModule,
     UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
