@@ -1,28 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, Req, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { ChangePasswordDto } from './dto/change-password.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post()
-  @HttpCode(201)
-  @ApiOperation({ summary: 'Create a new user' })
-  @ApiResponse({ status: 201, description: 'User created successfully', type: User })
-  @ApiBody({ type: CreateUserDto })
-  async create(@Body() createUserDto: CreateUserDto): Promise<object> {
-    const newUser = await this.userService.create(createUserDto);
-    return {
-      message: 'User created successfully',
-      user: newUser,
-    };
-  }
 
   @Get()
   @HttpCode(200)
@@ -50,18 +35,6 @@ export class UserController {
     return {
       message: 'User updated successfully',
       user: updatedUser,
-    };
-  }
-
-  @Patch(':id/password')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Update user password' })
-  @ApiResponse({ status: 201, description: 'Password changed successfully' })
-  @ApiBody({ type: ChangePasswordDto })
-  async changePassword(@Param('id') id: string, @Body() changePasswordDto: ChangePasswordDto): Promise<object> {
-    await this.userService.changePassword(id, changePasswordDto);
-    return {
-      message: 'Password changed successfully',
     };
   }
 
