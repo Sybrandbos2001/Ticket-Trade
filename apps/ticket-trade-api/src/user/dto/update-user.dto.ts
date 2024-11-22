@@ -15,11 +15,6 @@ export class UpdateUserDto extends PartialType(RegisterDto) {
     @IsString()
     lastname: string;
 
-    @ApiProperty({ example: 'johndoe', description: 'Username of user', uniqueItems: true })
-    @IsNotEmpty()
-    @IsString()
-    username: string;
-
     @ApiProperty({ example: '+31 6 12345678', description: 'Phonenumber of user' })
     @IsNotEmpty()
     @IsPhoneNumber(null, { message: 'Use the following phone number format : +31 6 12345678' })
