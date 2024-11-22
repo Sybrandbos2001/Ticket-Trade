@@ -10,7 +10,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @HttpCode(200)
   @ApiOperation({ summary: 'Retrieve all users' })
   @ApiResponse({ status: 200, description: 'List of all users', type: [User] })
   async findAll(): Promise<User[]> {
@@ -18,7 +17,6 @@ export class UserController {
   }
 
   @Get(':id')
-  @HttpCode(200)
   @ApiOperation({ summary: 'Retrieve single user by ID' })
   @ApiResponse({ status: 200, description: 'Single user by ID', type: User })
   async findOne(@Param('id') id: string): Promise<User> {
@@ -26,7 +24,6 @@ export class UserController {
   }
 
   @Patch(':id')
-  @HttpCode(200)
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiResponse({ status: 201, description: 'User updated successfully', type: User })
   @ApiBody({ type: UpdateUserDto })
@@ -39,7 +36,6 @@ export class UserController {
   }
 
   @Delete(':id')
-  @HttpCode(200)
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiResponse({ status: 201, description: 'User deleted successfully' })
   async remove(@Param('id') id: string): Promise<object> {
@@ -50,7 +46,6 @@ export class UserController {
   }
 
   @Post(':id/follow')
-  @HttpCode(200)
   @ApiOperation({ summary: 'Follow user by ID' })
   @ApiResponse({ status: 201, description: 'User has been successfully followed' })
   async followUser(@Param('id') userId: string, @Req() req) {

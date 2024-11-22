@@ -16,7 +16,7 @@ export class AuthService {
       private userService: UserService, 
       private jwtService : JwtService) {}
 
-    async signIn(loginDto : LoginDto): Promise<any> {
+    async signIn(loginDto : LoginDto): Promise<string> {
         const user = await this.userService.findByEmail(loginDto.email);
 
         if (!user) {
@@ -67,10 +67,10 @@ export class AuthService {
         }
     }
 
-    async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
-        const user = await this.userService.findOne(userId);
+    async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
+        const user = await this.userService.findByEmail(email);
         if (!user) {
-          throw new NotFoundException(`User with ID ${userId} not found`);
+          throw new NotFoundException(`User with email ${email} not found`);
         }
     
         const isMatch = await bcrypt.compare(changePasswordDto.currentPassword, user.password);
@@ -83,6 +83,4 @@ export class AuthService {
         user.password = await bcrypt.hash(changePasswordDto.newPassword, saltRounds);
         await user.save();
       }
-
-
 }

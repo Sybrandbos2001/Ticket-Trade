@@ -6,3 +6,4 @@ export * from './lib/ticket.interface';
 export * from './lib/user.interface';
 export * from './lib/login.interface';
 export * from './lib/role.enum';
+export * from './lib/auth-request.interface';
