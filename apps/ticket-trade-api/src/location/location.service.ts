@@ -38,9 +38,8 @@ export class LocationService {
 
   async findOne(id: string) {
     try {
-      console.log('ID', id);
-      const user = await this.locationModel.findById(id);
-      return user;
+      const location = await this.locationModel.findById(id);
+      return location;
     } catch (error) {
       console.error(error.message);
       throw new NotFoundException(`Location with ID ${id} not found`);
@@ -62,7 +61,7 @@ export class LocationService {
       console.error(error);
       if (error.code === 11000) {
         throw new ConflictException(
-          `User with the same ${Object.keys(error.keyValue)[0]} already exists`
+          `Location with the same ${Object.keys(error.keyValue)[0]} already exists`
         );
       }
     }

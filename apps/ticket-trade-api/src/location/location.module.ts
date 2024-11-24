@@ -10,5 +10,6 @@ import { Location, LocationSchema } from './entities/location.entity';
   ],
   controllers: [LocationController],
   providers: [LocationService],
+  exports: [MongooseModule]
 })
 export class LocationModule {}
