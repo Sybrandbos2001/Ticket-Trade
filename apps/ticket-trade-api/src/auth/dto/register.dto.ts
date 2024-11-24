@@ -30,7 +30,7 @@ export class RegisterDto implements IUser {
     @IsPhoneNumber(null, { message: 'Use the following phone number format : +31 6 12345678' })
     phone: string;
 
-    @ApiProperty({ example: 'john.doe@example.com', description: 'Emailadres of user' })
+    @ApiProperty({ example: 'john.doe@example.com', description: 'Emailadres of user', uniqueItems: true })
     @Transform(({ value }) => value.toLowerCase())
     @IsNotEmpty()
     @IsEmail()

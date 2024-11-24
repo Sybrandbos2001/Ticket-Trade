@@ -2,12 +2,11 @@ import { Controller, Request, Get, Post, Body, Patch, Param, Delete, BadRequestE
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { IAuthRequest, Role } from '@ticket-trade/domain';
 
-@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -23,15 +22,6 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.USER, Role.ADMIN)
-  @Get('profile')
-  @ApiOperation({ summary: 'Get profile' })
-  @ApiResponse({ status: 200, description: 'Get profile', type: User })
-  async getProfile(@Request() req : IAuthRequest): Promise<User> {
-    return await this.userService.findByEmailOrUsername(req.user.email);
-  } 
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
   @Get(':username')
   @ApiOperation({ summary: 'Retrieve single user by username' })
   @ApiResponse({ status: 200, description: 'Single user by username', type: User })
@@ -41,10 +31,18 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.USER, Role.ADMIN)
+  @Get('profile')
+  @ApiOperation({ summary: 'Get profile' })
+  @ApiResponse({ status: 200, description: 'Get profile', type: User })
+  async getProfile(@Request() req : IAuthRequest): Promise<User> {
+    return await this.userService.findByEmailOrUsername(req.user.email);
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
   @Patch()
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: 201, description: 'User updated successfully', type: User })
-  @ApiBody({ type: UpdateUserDto })
   async update(@Request() req : IAuthRequest, @Body() updateUserDto: UpdateUserDto): Promise<object> {
     const updatedUser = await this.userService.update(req.user.sub, updateUserDto);
     return {
@@ -55,9 +53,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.USER, Role.ADMIN)
-  @Delete()
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 201, description: 'User deleted successfully' })
+  @Delete()
   async remove(@Request() req : IAuthRequest): Promise<object> {
     await this.userService.remove(req.user.sub);
     return {
@@ -67,9 +65,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.USER, Role.ADMIN)
-  @Post('follow/:username')
   @ApiOperation({ summary: 'Follow user by username' })
   @ApiResponse({ status: 201, description: 'User has been successfully followed' })
+  @Post('follow/:username')
   async followUser(@Request() req: IAuthRequest, @Param('username') username: string): Promise<object> {
     const currentUsername = req.user.username; 
     

@@ -18,7 +18,7 @@ export class UserService {
 
   async findOne(username: string) {
     try {
-      const user = await this.userModel.findOne({  username: username }).select('name lastname username following -_id');;
+      const user = await this.userModel.findOne({  username: username }).select('name lastname username following -_id');
       return user;
     } catch (error) {
       console.error(error.message);
