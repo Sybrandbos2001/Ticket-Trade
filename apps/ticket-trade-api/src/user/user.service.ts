@@ -16,13 +16,13 @@ export class UserService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(username: string) {
     try {
-      const user = await this.userModel.findById(id).select('name lastname username following -_id');
+      const user = await this.userModel.findOne({  username: username }).select('name lastname username following -_id');;
       return user;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with username ${username} not found`);
     }
   }
 

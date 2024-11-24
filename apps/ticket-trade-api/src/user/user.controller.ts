@@ -23,11 +23,20 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles(Role.USER, Role.ADMIN)
-  @Get(':id')
-  @ApiOperation({ summary: 'Retrieve single user by ID' })
-  @ApiResponse({ status: 200, description: 'Single user by ID', type: User })
-  async findOne(@Param('id') id: string): Promise<User> {
-    return await this.userService.findOne(id);
+  @Get('profile')
+  @ApiOperation({ summary: 'Get profile' })
+  @ApiResponse({ status: 200, description: 'Get profile', type: User })
+  async getProfile(@Request() req : IAuthRequest): Promise<User> {
+    return await this.userService.findByEmailOrUsername(req.user.email);
+  } 
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
+  @Get(':username')
+  @ApiOperation({ summary: 'Retrieve single user by username' })
+  @ApiResponse({ status: 200, description: 'Single user by username', type: User })
+  async findOne(@Param('username') username: string): Promise<User> {
+    return await this.userService.findOne(username);
   }
 
   @UseGuards(AuthGuard)
@@ -36,8 +45,8 @@ export class UserController {
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({ status: 201, description: 'User updated successfully', type: User })
   @ApiBody({ type: UpdateUserDto })
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<object> {
-    const updatedUser = await this.userService.update(id, updateUserDto);
+  async update(@Request() req : IAuthRequest, @Body() updateUserDto: UpdateUserDto): Promise<object> {
+    const updatedUser = await this.userService.update(req.user.sub, updateUserDto);
     return {
       message: 'User updated successfully',
       user: updatedUser,
@@ -49,8 +58,8 @@ export class UserController {
   @Delete()
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 201, description: 'User deleted successfully' })
-  async remove(@Param('id') id: string): Promise<object> {
-    await this.userService.remove(id);
+  async remove(@Request() req : IAuthRequest): Promise<object> {
+    await this.userService.remove(req.user.sub);
     return {
       message: 'User deleted successfully',
     };
