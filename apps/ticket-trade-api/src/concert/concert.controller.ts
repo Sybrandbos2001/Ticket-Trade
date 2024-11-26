@@ -1,34 +1,70 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
+import { Roles } from '../auth/roles.decorator';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
+import { Role } from '@ticket-trade/domain';
+import { Concert } from './entities/concert.entity';
 
 @Controller('concert')
 export class ConcertController {
   constructor(private readonly concertService: ConcertService) {}
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN)
   @Post()
-  create(@Body() createConcertDto: CreateConcertDto) {
-    return this.concertService.create(createConcertDto);
+  @ApiOperation({ summary: 'Create concert' })
+  @ApiResponse({ status: 201, description: 'concert created successfully', type: Concert })
+  async create(@Body() createconcertDto: CreateConcertDto) : Promise<object> {
+    const newconcert = await this.concertService.create(createconcertDto);
+    return {
+      message: 'Concert created successfully',
+      concert: newconcert,
+    };
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @ApiOperation({ summary: 'Retrieve all concerts' })
+  @ApiResponse({ status: 200, description: 'List of all concerts', type: [Concert] })
   @Get()
-  findAll() {
-    return this.concertService.findAll();
+  async findAll() {
+    return await this.concertService.findAll();
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @ApiOperation({ summary: 'Retrieve single concert by ID' })
+  @ApiResponse({ status: 200, description: 'Single concert by ID', type: Concert })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.concertService.findOne(+id);
+    return this.concertService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Update Concert' })
+  @ApiResponse({ status: 201, description: 'Concert updated successfully', type: Concert })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConcertDto: UpdateConcertDto) {
-    return this.concertService.update(+id, updateConcertDto);
+  async update(@Param('id') id: string, @Body() updateconcertDto: UpdateConcertDto) : Promise<object> {
+    const updatedconcert = await this.concertService.update(id, updateconcertDto);
+    return {
+      message: 'Concert updated successfully',
+      concert: updatedconcert,
+    };
   }
 
+  @UseGuards(AuthGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Delete concert' })
+  @ApiResponse({ status: 201, description: 'Concert deleted successfully' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.concertService.remove(+id);
+  async remove(@Param('id') id: string) : Promise<object> {
+    await this.concertService.remove(id);
+    return {
+      message: 'Concert deleted successfully',
+    };
   }
 }

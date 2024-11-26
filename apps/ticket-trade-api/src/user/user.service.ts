@@ -16,13 +16,23 @@ export class UserService {
     }
   }
 
-  async findOne(username: string) {
+  async findOne(id: string) {
     try {
-      const user = await this.userModel.findOne({  username: username }).select('name lastname username following -_id');
+      const user = await this.userModel.findById(id).select('-password -__v');
       return user;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`User with username ${username} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+  }
+
+  async getFullUser(identifier: string){
+    try {
+      const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+      return user;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`User with email or ID ${identifier} not found`);
     }
   }
 
@@ -75,7 +85,7 @@ export class UserService {
     );
   }
 
-  async findByEmailOrUsername(identifier: string) {
+  async getProfile(identifier: string) {
     try {
       const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
       return user;

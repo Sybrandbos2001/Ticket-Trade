@@ -18,13 +18,13 @@ export class LocationService {
       return newLocation.toObject();
     } catch (error) {
       console.error(error);
-
       if (error.code === 11000) {
         // Duplicate key error (E11000)
         throw new ConflictException(
           `Location with the same ${Object.keys(error.keyValue)[0]} already exists`
         );
       }
+      throw error;
     }
   }
 

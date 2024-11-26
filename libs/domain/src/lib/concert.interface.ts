@@ -8,6 +8,8 @@ export interface IConcert {
     startDateAndTime: Date;
     endDateAndTime: Date;
     amountTickets: number;
-    location: ILocation;
-    artist: IArtist;
+    location?: ILocation;
+    locationId?: string;
+    artist?: IArtist;
+    artistId?: string;
 }

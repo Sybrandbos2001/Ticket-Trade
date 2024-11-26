@@ -21,12 +21,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @Get(':username')
-  @ApiOperation({ summary: 'Retrieve single user by username' })
-  @ApiResponse({ status: 200, description: 'Single user by username', type: User })
-  async findOne(@Param('username') username: string): Promise<User> {
-    return await this.userService.findOne(username);
+  @Roles( Role.ADMIN)
+  @Get(':id')
+  @ApiOperation({ summary: 'Retrieve single user by ID' })
+  @ApiResponse({ status: 200, description: 'Single user by ID', type: User })
+  async findOne(@Param('id') id: string): Promise<User> {
+    return await this.userService.findOne(id);
   }
 
   @UseGuards(AuthGuard)
@@ -35,7 +35,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get profile' })
   @ApiResponse({ status: 200, description: 'Get profile', type: User })
   async getProfile(@Request() req : IAuthRequest): Promise<User> {
-    return await this.userService.findByEmailOrUsername(req.user.email);
+    return await this.userService.getProfile(req.user.email);
   }
 
   @UseGuards(AuthGuard)
@@ -77,7 +77,7 @@ export class UserController {
     }
 
     // Check if user to follow exists
-    const userToFollow = await this.userService.findByEmailOrUsername(username);
+    const userToFollow = await this.userService.getProfile(username);
 
     // Follow user
     await this.userService.followUser(req.user.sub, userToFollow.id);
@@ -94,7 +94,7 @@ export class UserController {
   async unfollowUser(@Request() req: IAuthRequest, @Param('username') username: string): Promise<object> {
     
     // Getting userID of user to unfollow
-    const userToUnFollow = await this.userService.findByEmailOrUsername(username);
+    const userToUnFollow = await this.userService.getProfile(username);
 
     // Follow user
     await this.userService.unfollowUser(req.user.sub, userToUnFollow.id);

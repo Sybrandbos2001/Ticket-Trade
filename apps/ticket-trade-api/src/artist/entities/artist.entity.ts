@@ -14,7 +14,7 @@ export class Artist extends Document implements IArtist {
     @Prop({ required: true })
     name: string;
 
-    @ApiProperty({ example: 'Post Malone, artiestennaam van Austin Richard Post, is een Amerikaanse zanger, songwriter, muziekproducent en gitarist. Op de middelbare school experimenteerde hij al met muziek. Hij zat in een heavymetalband en maakte op zijn zestiende een mixtape met het audioprogramma FL Studio.', description: 'Description' })
+    @ApiProperty({ example: 'Post Malone, geboren als Austin Richard Post, is een Amerikaanse zanger en muziekproducent.', description: 'Description' })
     @Prop({ required: true })
     description: string;
 }
