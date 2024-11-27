@@ -1,9 +1,7 @@
 import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { RegisterDto } from '../../auth/dto/register.dto';
 
-export class UpdateUserDto extends PartialType(RegisterDto) {
+export class UpdateUserDto {
     
     @ApiProperty({ example: 'John', description: 'Firstname of user' })
     @IsNotEmpty()
@@ -14,11 +12,6 @@ export class UpdateUserDto extends PartialType(RegisterDto) {
     @IsNotEmpty()
     @IsString()
     lastname: string;
-
-    @ApiProperty({ example: 'johndoe', description: 'Username of user', uniqueItems: true })
-    @IsNotEmpty()
-    @IsString()
-    username: string;
 
     @ApiProperty({ example: '+31 6 12345678', description: 'Phonenumber of user' })
     @IsNotEmpty()

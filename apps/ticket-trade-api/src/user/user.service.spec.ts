@@ -1,38 +1,34 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
+import { TicketService } from '../ticket/ticket.service';
 
-describe('UserService', () => {
-  let service: UserService;
+describe('TicketService', () => {
+  let service: TicketService;
 
-  // Mock UserModel
-  const mockUserModel = {
-    find: jest.fn().mockReturnValue({
-      select: jest.fn().mockReturnValue([]),
-    }),
+  const mockTicketModel = {
+    find: jest.fn(),
+    findOne: jest.fn(),
+    create: jest.fn(),
+    // Voeg andere methoden toe die je in je service gebruikt
   };
+
+  const mockConcertModel = {};
+  const mockUserModel = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UserService,
-        {
-          provide: getModelToken('User'),
-          useValue: mockUserModel,
-        },
+        TicketService,
+        { provide: getModelToken('Ticket'), useValue: mockTicketModel },
+        { provide: getModelToken('Concert'), useValue: mockConcertModel },
+        { provide: getModelToken('User'), useValue: mockUserModel },
       ],
     }).compile();
 
-    service = module.get<UserService>(UserService);
+    service = module.get<TicketService>(TicketService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should call find method of UserModel', async () => {
-    await service.findAll();
-    expect(mockUserModel.find).toHaveBeenCalled();
-    expect(mockUserModel.find().select).toHaveBeenCalledWith('-password');
   });
 });

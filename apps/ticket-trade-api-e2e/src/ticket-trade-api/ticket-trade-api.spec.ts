@@ -7,6 +7,6 @@ describe('GET /api', () => {
     const res = await axios.get(`${baseURL}/api`);
 
     expect(res.status).toBe(200);
-    expect(res.data).toEqual({ message: 'Welcome to Ticket-Trad' });
+    expect(res.data).toEqual({ message: 'Welcome to Ticket-Trade' });
   });
 });
