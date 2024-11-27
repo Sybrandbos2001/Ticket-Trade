@@ -17,7 +17,7 @@ export class AuthService {
       private jwtService : JwtService) {}
 
     async signIn(loginDto : LoginDto): Promise<string> {
-        const user = await this.userService.findByEmail(loginDto.email);
+        const user = await this.userService.getFullUser(loginDto.email);
 
         if (!user) {
           throw new NotFoundException(`User with email ${loginDto.email} not found`);
@@ -68,7 +68,7 @@ export class AuthService {
     }
 
     async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
-        const user = await this.userService.findByEmail(email);
+        const user = await this.userService.getFullUser(email);
         if (!user) {
           throw new NotFoundException(`User with email ${email} not found`);
         }

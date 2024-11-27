@@ -1,26 +1,82 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Artist, ArtistDocument } from './entities/artist.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+
+  constructor(
+    @InjectModel(Artist.name) private readonly ArtistModel: Model<ArtistDocument>,
+  ) {}
+
+  async create(createArtistDto: CreateArtistDto) {
+    try {
+      const newArtist = new this.ArtistModel(createArtistDto);
+      await newArtist.save();
+      return newArtist.toObject();
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === 11000) {
+        // Duplicate key error (E11000)
+        throw new ConflictException(
+          `Artist with the same ${Object.keys(error.keyValue)[0]} already exists`
+        );
+      }
+    }
   }
 
-  findAll() {
-    return `This action returns all artist`;
+  async findAll() {
+    try {
+      return await this.ArtistModel.find();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  async findOne(id: string) {
+    try {
+      const user = await this.ArtistModel.findById(id);
+      return user;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`Artist with ID ${id} not found`);
+    }
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    try {
+      const updatedArtist = await this.ArtistModel.findByIdAndUpdate(id, updateArtistDto, {
+        new: true, // Return the updated document
+        runValidators: true, // Validate the update
+      });
+
+      if (!updatedArtist) {
+        throw new NotFoundException(`Artist with ID ${id} not found`);
+      }
+      return updatedArtist.toObject();
+    } catch (error) {
+      console.error(error);
+      if (error.code === 11000) {
+        throw new ConflictException(
+          `Artist with the same ${Object.keys(error.keyValue)[0]} already exists`
+        );
+      }
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  async remove(id: string) {
+    try {
+      const deletedLocation = await this.ArtistModel.findByIdAndDelete(id);
+
+      if (!deletedLocation) {
+        throw new NotFoundException(`Artist with ID ${id} not found`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

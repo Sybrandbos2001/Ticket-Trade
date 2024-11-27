@@ -10,7 +10,7 @@ export class UserService {
 
   async findAll() {
     try {
-      return await this.userModel.find().select('-password');
+      return await this.userModel.find().select('name lastname username following -_id');
     } catch (error) {
       console.error(error);
     }
@@ -18,11 +18,21 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      const user = await this.userModel.findById(id).select('-password');
+      const user = await this.userModel.findById(id).select('-password -__v');
       return user;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+  }
+
+  async getFullUser(identifier: string){
+    try {
+      const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+      return user;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`User with email or ID ${identifier} not found`);
     }
   }
 
@@ -69,15 +79,18 @@ export class UserService {
   }
 
   async unfollowUser(currentUserId: string, userId: string) {
-    return null;
+    await this.userModel.updateOne(
+      { _id: currentUserId },
+      { $pull: { following: userId } }
+    );
   }
 
-  async findByEmail(email: string) {
+  async getProfile(identifier: string) {
     try {
-      const user = await this.userModel.findOne({ email });
+      const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
       return user;
     } catch (error) {
-      console.error('Error in findByEmail:', error.message);
+      console.error('Error in findByEmailOrUsername:', error.message);
     }
   }
 }

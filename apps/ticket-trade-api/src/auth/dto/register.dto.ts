@@ -1,4 +1,5 @@
 import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsStrongPassword } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { TicketSchema } from '../../ticket/entities/ticket.entity';
 import { Prop } from '@nestjs/mongoose';
 import { ITicket, IUser, Role } from '@ticket-trade/domain';
@@ -29,7 +30,8 @@ export class RegisterDto implements IUser {
     @IsPhoneNumber(null, { message: 'Use the following phone number format : +31 6 12345678' })
     phone: string;
 
-    @ApiProperty({ example: 'john.doe@example.com', description: 'Emailadres of user' })
+    @ApiProperty({ example: 'john.doe@example.com', description: 'Emailadres of user', uniqueItems: true })
+    @Transform(({ value }) => value.toLowerCase())
     @IsNotEmpty()
     @IsEmail()
     email: string;
