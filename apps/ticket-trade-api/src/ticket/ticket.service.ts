@@ -57,8 +57,7 @@ export class TicketService {
 
   async findAll(userId : string) {
     try {
-      console.log(userId);
-      return await this.concertModel.find({ tickets: { $elemMatch: { userId: userId } } });
+      return await this.ticketModel.find({ userId: userId });
     } catch (error) {
       console.error(error);
     }
@@ -67,21 +66,33 @@ export class TicketService {
   async findOne(userId : string, id: string) {
     try {
       const ticket = await this.ticketModel.findById(id);
+      if(!ticket) {
+        throw new NotFoundException(`Ticket with ID ${id} not found`);
+      }
+
       if(ticket.userId !== userId) {
         throw new ForbiddenException(`User is not authorized to access this ticket`);
       }
       return ticket;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`Ticket with ID ${id} not found`);
+      throw error;
     }
   }
 
   async scanTicket(userId : string, id: string) {
     try {
       const ticket = await this.ticketModel.findById(id);
+      if(!ticket) {
+        throw new NotFoundException(`Ticket with ID ${id} not found`);
+      }
+      
       if(ticket.userId !== userId) {
         throw new ForbiddenException(`User is not authorized to access this ticket`);
+      }
+
+      if(ticket.used) {
+        throw new ForbiddenException(`Ticket with ID ${id} has already been used`);
       }
 
       const updatedTicket = await this.ticketModel.findByIdAndUpdate(
@@ -98,7 +109,7 @@ export class TicketService {
       return updatedTicket;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`Ticket with ID ${id} not found`);
+      throw error;
     }
   }
 }

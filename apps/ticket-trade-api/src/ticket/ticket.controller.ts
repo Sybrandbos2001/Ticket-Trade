@@ -46,7 +46,7 @@ export class TicketController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Scan Ticket' })
   @ApiResponse({ status: 201, description: 'Ticket scanned successfully' })
   @Patch('scan/:id')
