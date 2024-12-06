@@ -9,6 +9,13 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     Logger.log('✅ NestJS application instance created', 'Bootstrap');
 
+    // Enable CORS
+    app.enableCors({
+      origin: 'http://localhost:4200',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+    });
+
     // Configure global validation
     app.useGlobalPipes(new ValidationPipe({
       whitelist: true, 

@@ -2,7 +2,7 @@ import { Controller, Request, Get, Post, Body, Patch, Param, Delete, BadRequestE
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { IAuthRequest, Role } from '@ticket-trade/domain';
@@ -22,20 +22,11 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Roles( Role.ADMIN)
-  @Get(':id')
+  @Get('id/:id')
   @ApiOperation({ summary: 'Retrieve single user by ID' })
   @ApiResponse({ status: 200, description: 'Single user by ID', type: User })
   async findOne(@Param('id') id: string): Promise<User> {
     return await this.userService.findOne(id);
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @Get('profile')
-  @ApiOperation({ summary: 'Get profile' })
-  @ApiResponse({ status: 200, description: 'Get profile', type: User })
-  async getProfile(@Request() req : IAuthRequest): Promise<User> {
-    return await this.userService.getProfile(req.user.email);
   }
 
   @UseGuards(AuthGuard)
@@ -61,6 +52,15 @@ export class UserController {
     return {
       message: 'User deleted successfully',
     };
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('profile')
+  @ApiOperation({ summary: 'Get profile' })
+  @ApiResponse({ status: 200, description: 'Get profile', type: User })
+  async getProfile(@Request() req : IAuthRequest): Promise<User> {
+    return await this.userService.getProfile(req.user.email);
   }
 
   @UseGuards(AuthGuard)
@@ -101,5 +101,14 @@ export class UserController {
     return {
       message: 'User has been successfully unfollowed',
     };
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('recommendation')
+  @ApiOperation({ summary: 'Get recommendations for users to follow' })
+  @ApiResponse({ status: 200, description: 'User follow recommendations' })
+  async getFollowRecommendations(@Request() req: IAuthRequest): Promise<object> {
+    return await this.userService.getFollowRecommendations(req.user.sub);
   }
 }

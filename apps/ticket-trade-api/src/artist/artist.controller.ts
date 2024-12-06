@@ -39,7 +39,7 @@ export class ArtistController {
   @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single Artist by ID' })
   @ApiResponse({ status: 200, description: 'Single Artist by ID', type: Artist })
-  @Get(':id')
+  @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.artistService.findOne(id);
   }

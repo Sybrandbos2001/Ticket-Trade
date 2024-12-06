@@ -11,6 +11,7 @@ import { LocationModule } from '../location/location.module';
 import { TicketModule } from '../ticket/ticket.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Module({
   imports: [
@@ -27,9 +28,9 @@ import { AuthModule } from '../auth/auth.module';
     LocationModule,
     TicketModule,
     UserModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Neo4jService],
 })
 export class AppModule {}

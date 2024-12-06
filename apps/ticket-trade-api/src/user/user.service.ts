@@ -3,10 +3,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
 import { Model } from 'mongoose';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+  @InjectModel(User.name) private userModel: Model<UserDocument>,
+  private readonly neo4jService: Neo4jService) {}
 
   async findAll() {
     try {
@@ -76,12 +79,26 @@ export class UserService {
         { _id: currentUserId },
         { $addToSet: { following: userId } }
     );
+
+    const session = this.neo4jService.getSession();
+    await session.run(
+      `MATCH (follower:User {id: $currentUserId}), (followee:User {id: $userId})
+      MERGE (follower)-[:FOLLOWS]->(followee)`,
+      { currentUserId, userId },
+    );
   }
 
   async unfollowUser(currentUserId: string, userId: string) {
     await this.userModel.updateOne(
       { _id: currentUserId },
       { $pull: { following: userId } }
+    );
+
+    const session = this.neo4jService.getSession();
+    await session.run(
+      `MATCH (follower:User {id: $currentUserId})-[r:FOLLOWS]->(followee:User {id: $userId})
+      DELETE r`,
+      { currentUserId, userId },
     );
   }
 
@@ -93,4 +110,23 @@ export class UserService {
       console.error('Error in findByEmailOrUsername:', error.message);
     }
   }
+
+  async getFollowRecommendations(userId: string) {
+    const session = this.neo4jService.getSession();
+    const result = await session.run(
+      `MATCH (user:User {id: $userId})-[:FOLLOWS]->(friend:User)-[:FOLLOWS]->(potential:User)
+      WHERE NOT (user)-[:FOLLOWS]->(potential) AND user <> potential
+      RETURN potential.id AS recommendedUserId, potential.username AS recommendedUsername, COUNT(friend) AS mutualFriendCount
+      ORDER BY mutualFriendCount DESC
+      LIMIT 5`,
+      { userId }
+    );
+  
+    return result.records.map(record => ({
+      recommendedUserId: record.get('recommendedUserId'),
+      recommendedUsername: record.get('recommendedUsername'),
+      mutualFriendCount: record.get('mutualFriendCount'),
+    }));
+  }
+  
 }

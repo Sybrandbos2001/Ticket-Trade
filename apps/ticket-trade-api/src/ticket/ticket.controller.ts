@@ -12,7 +12,7 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.USER)
   @Post()
   @ApiOperation({ summary: 'Create Ticket' })
   @ApiResponse({ status: 201, description: 'Ticket created successfully', type: Ticket })
@@ -39,7 +39,7 @@ export class TicketController {
   @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single Ticket by ID' })
   @ApiResponse({ status: 200, description: 'Single Ticket by ID', type: Ticket })
-  @Get(':id')
+  @Get('id/:id')
   findOne(@Param('id') id: string, @Request() req: IAuthRequest) {
     const userID = req.user.sub; 
     return this.ticketService.findOne(userID, id);

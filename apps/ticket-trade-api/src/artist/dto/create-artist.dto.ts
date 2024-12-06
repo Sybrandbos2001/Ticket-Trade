@@ -15,4 +15,9 @@ export class CreateArtistDto implements IArtist {
     @IsNotEmpty()
     @IsString()
     description: string;
+
+    @ApiProperty({ example: '63e9b6f5c76a9a0017a2d4e8', description: 'ID of genre' })
+    @IsNotEmpty()
+    @IsString()
+    genreId: string;
 }

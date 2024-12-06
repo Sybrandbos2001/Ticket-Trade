@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Ticket, TicketSchema } from './entities/ticket.entity';
 import { Concert, ConcertSchema } from '../concert/entities/concert.entity';
 import { User, UserSchema } from '../user/entities/user.entity';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { User, UserSchema } from '../user/entities/user.entity';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [TicketController],
-  providers: [TicketService],
+  providers: [TicketService, Neo4jService],
   exports: [MongooseModule],
 })
 export class TicketModule {}
