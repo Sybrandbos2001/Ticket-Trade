@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-dark blue-bg mb-3">
+  <div class="container">
+    <a class="navbar-brand" routerLink="">
+      <h2 id="Logo-nav">TicketTrade</h2>
+    </a>
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">&#9776;</button>
+    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto mb-2 mx-4 mb-lg-0">
+        <li class="nav-item custom-link active">
+          <a class="nav-link" routerLink="" (click)="isMenuCollapsed = true">Home</a>
+        </li>
+        <li class="nav-item custom-link">
+          <a class="nav-link" routerLink="concerten" (click)="isMenuCollapsed = true">Concerten</a>
+        </li>
+        <li class="nav-item custom-link">
+          <a class="nav-link" routerLink="about" (click)="isMenuCollapsed = true">About</a>
+        </li>
+      </ul>
+
+      <ng-container *ngIf="(isLoggedIn$ | async) === false; else loggedInTemplate">
+        <div class="dropdown">
+          <button routerLink="login" class="dropbtn">
+            <i class="fa-solid fa-user mx-2"></i>Login
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #loggedInTemplate>
+        <div class="dropdown">
+          <button class="dropbtn">
+            <i class="fa-solid fa-user mx-2"></i>Gebruiker
+          </button>
+          <div class="dropdown-content text-center">
+            <a routerLink="admin">Admin</a>
+            <a routerLink="">Instellingen</a>
+            <a routerLink="">Vrienden</a>
+            <a routerLink="">Alerts</a>
+            <div class="dropdown-divider"></div>
+            <a routerLink="logout">Uitloggen</a>
+          </div>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</nav>

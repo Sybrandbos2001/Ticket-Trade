@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
 import { UpdateConcertDto } from './dto/update-concert.dto';
 import { Roles } from '../auth/roles.decorator';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
-import { Role } from '@ticket-trade/domain';
+import { IAuthRequest, Role } from '@ticket-trade/domain';
 import { Concert } from './entities/concert.entity';
 
 @Controller('concert')
@@ -38,7 +38,7 @@ export class ConcertController {
   @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single concert by ID' })
   @ApiResponse({ status: 200, description: 'Single concert by ID', type: Concert })
-  @Get(':id')
+  @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.concertService.findOne(id);
   }
@@ -66,5 +66,14 @@ export class ConcertController {
     return {
       message: 'Concert deleted successfully',
     };
+  }
+
+  @UseGuards(AuthGuard)
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('recommendation')
+  @ApiOperation({ summary: 'Get recommendations for concerts to attend to' })
+  @ApiResponse({ status: 200, description: 'User concert recommendations' })
+  async getConcertRecommendations(@Request() req: IAuthRequest): Promise<object> {
+    return await this.concertService.getConcertRecommendations(req.user.sub);
   }
 }

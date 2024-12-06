@@ -1,1 +1,140 @@
-/* You can add global styles to this file, and also import other style files */
+/*Overrule*/
+
+* {
+    word-break: break-word;
+    font-family: Roboto, sans-serif;
+}
+
+main {
+    min-height: 80vh;
+}
+
+h1 {
+    font-weight: bold !important;
+    font-size: 48px !important;
+    color: #304d6d;
+    text-transform: capitalize;
+}
+
+p {
+    font-size: 18px;
+}
+
+a {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+.custom-table-responsive {
+    min-width: 750px !important;
+}
+
+textarea {
+    resize: none;
+}
+
+
+/* Buttons */
+
+.btn {
+    font-size: 16px !important;
+}
+
+.btn a {
+    color: white !important;
+    text-decoration: none !important;
+    width: 100%;
+    height: auto;
+}
+
+.btn i {
+    color: white !important;
+}
+
+.primary-btn {
+    padding: 12px 40px !important;
+    color: white !important;
+    font-weight: bold !important;
+    background-color: #63adf2 !important;
+    border-radius: 10px !important;
+}
+
+.primary-btn:hover {
+    background-color: #4b87be !important;
+}
+
+.secondary-btn {
+    background-color: #3e4749 !important;
+}
+
+.secondary-btn:hover {
+    background-color: #525f61 !important;
+}
+
+.create-btn {
+    color: white !important;
+    background-color: #8f9d39 !important;
+}
+
+.create-btn:hover {
+    background-color: #5c6524 !important;
+}
+
+.edit-btn {
+    background-color: #fac213 !important;
+}
+
+.edit-btn:hover {
+    background-color: #d2a31b !important;
+}
+
+.delete-btn {
+    background-color: #dc3545 !important;
+}
+
+.delete-btn:hover {
+    background-color: #a3202c !important;
+}
+
+.detail-btn {
+    background-color: #0dcaf0 !important;
+}
+
+.detail-btn:hover {
+    background-color: #13a6c4 !important;
+}
+
+
+/* Elements */
+
+.title-blue {
+    color: #63adf2;
+}
+
+.grey-bg {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.boxing-shadow {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+#create-concert-btn-icon {
+    margin-right: 10px;
+}
+
+.detail-icon {
+    margin-right: 20px;
+    font-size: 40px;
+    min-width: 40px;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+  }

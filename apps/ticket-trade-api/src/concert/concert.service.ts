@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { Concert, ConcertDocument } from './entities/concert.entity';
 import { Artist, ArtistDocument } from '../artist/entities/artist.entity';
 import { Location, LocationDocument } from '../location/entities/location.entity';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Injectable()
 export class ConcertService {
@@ -14,6 +15,7 @@ export class ConcertService {
     @InjectModel(Concert.name) private readonly concertModel: Model<ConcertDocument>,
     @InjectModel(Artist.name) private readonly artistModel: Model<ArtistDocument>,
     @InjectModel(Location.name) private readonly locationModel: Model<LocationDocument>,
+    private readonly neo4jService: Neo4jService
   ) {}
 
   async create(createConcertDto: CreateConcertDto) {
@@ -122,5 +124,27 @@ export class ConcertService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async getConcertRecommendations(userId: string){
+    const session = this.neo4jService.getSession();
+    const result = await session.run(
+      `MATCH (user:User {id: $userId})-[:FOLLOWS]->(friend:User)-[:ATTENDS]->(concert:Concert)
+       WHERE NOT (user)-[:ATTENDS]->(concert)
+       AND NOT EXISTS {
+         MATCH (user)-[:ATTENDS]->(conflicting:Concert)
+         WHERE conflicting.start < concert.end AND conflicting.end > concert.start
+       }
+       RETURN concert.id AS recommendedConcertId, concert.name AS concertName, COUNT(friend) AS attendingFriendsCount
+       ORDER BY attendingFriendsCount DESC
+       LIMIT 5`,
+      { userId }
+    );
+  
+    return result.records.map(record => ({
+      recommendedConcertId: record.get('recommendedConcertId'),
+      concertName: record.get('concertName'),
+      attendingFriendsCount: record.get('attendingFriendsCount'),
+    }));
   }
 }

@@ -4,17 +4,29 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Artist, ArtistDocument } from './entities/artist.entity';
 import { Model } from 'mongoose';
+import { Genre, GenreDocument } from '../genre/entities/genre.entity';
 
 @Injectable()
 export class ArtistService {
 
   constructor(
     @InjectModel(Artist.name) private readonly ArtistModel: Model<ArtistDocument>,
+    @InjectModel(Genre.name) private readonly GenreModel: Model<GenreDocument>,
   ) {}
 
   async create(createArtistDto: CreateArtistDto) {
     try {
-      const newArtist = new this.ArtistModel(createArtistDto);
+      const { genreId, ...ArtistData } = createArtistDto;
+      const genre = await this.GenreModel.findById(genreId).exec();
+      if (!genre) {
+        throw new NotFoundException(`Genre with ID ${genreId} not found`);
+      }
+
+      const newArtist = new this.ArtistModel({
+        ...ArtistData,
+        genre,
+      });
+
       await newArtist.save();
       return newArtist.toObject();
     } catch (error) {

@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Concert, ConcertDocument } from '../concert/entities/concert.entity';
 import { User, UserDocument } from '../user/entities/user.entity';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Injectable()
 export class TicketService {
@@ -12,7 +13,8 @@ export class TicketService {
   constructor(
     @InjectModel(Ticket.name) private readonly ticketModel: Model<TicketDocument>,
     @InjectModel(Concert.name) private readonly concertModel: Model<ConcertDocument>,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private readonly neo4jService: Neo4jService
   ) {}
 
   async create(userId : string, createTicketDto: CreateTicketDto) {
@@ -42,6 +44,20 @@ export class TicketService {
         { $addToSet: { tickets: newTicket } }
       );
 
+      const session = this.neo4jService.getSession();
+      await session.run(
+        `MERGE (c:Concert {id: $concertId, name: $concertName, start: $start, end: $end})
+         MERGE (u:User {id: $userId})
+         MERGE (u)-[:ATTENDS]->(c)`,
+        {
+          userId,
+          concertId: concert._id.toString(),
+          concertName: concert.name,
+          start: new Date(concert.startDateAndTime).toISOString(), 
+          end: new Date(concert.endDateAndTime).toISOString(), 
+        }
+      );
+
       return newTicket.toObject();
     
     } catch (error) {
@@ -52,7 +68,6 @@ export class TicketService {
       }
       throw error;
     }
-    
   }
 
   async findAll(userId : string) {
