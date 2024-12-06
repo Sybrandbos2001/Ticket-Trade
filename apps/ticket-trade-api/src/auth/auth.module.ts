@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UserModule } from '../user/user.module';
       })
     })
   ],
-  providers: [AuthService],
+  providers: [AuthService, Neo4jService],
   controllers: [AuthController],
   exports: [AuthService],
 })

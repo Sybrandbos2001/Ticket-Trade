@@ -38,7 +38,7 @@ export class GenreController {
   @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single genre by ID' })
   @ApiResponse({ status: 200, description: 'Single genre by ID', type: Genre })
-  @Get(':id')
+  @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.genreService.findOne(id);
   }
