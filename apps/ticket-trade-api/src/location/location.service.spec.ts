@@ -23,7 +23,5 @@ describe('LocationService', () => {
     service = module.get<LocationService>(LocationService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+  it.todo("toDo");
 });

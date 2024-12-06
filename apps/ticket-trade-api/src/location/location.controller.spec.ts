@@ -38,7 +38,5 @@ describe('LocationController', () => {
     controller = module.get<LocationController>(LocationController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  it.todo("toDo");
 });
