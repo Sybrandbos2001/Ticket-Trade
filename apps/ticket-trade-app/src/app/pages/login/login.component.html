@@ -1,1 +1,36 @@
-<p>login works!</p>
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-sm-3 col-md-5 col-lg-7 col-xl-9 d-none d-sm-inline login-landing">
+          <span class="h-100 w-100 login-landing-span"></span>
+      </div>
+      <div class="col-12 col-sm-9 col-md-7 col-lg-5 col-xl-3 px-4 d-flex flex-column justify-content-center account-form">
+          <h1 class="title-white-colored">Inloggen</h1>
+          <mat-card>
+            <mat-card-content>
+              <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <mat-form-field appearance="fill">
+                  <mat-label>Email</mat-label>
+                  <input matInput formControlName="email" type="email" />
+                  <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                    Voer een geldig e-mailadres in.
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>Wachtwoord</mat-label>
+                  <input matInput formControlName="password" type="password" />
+                  <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    Wachtwoord is verplicht.
+                  </mat-error>
+                </mat-form-field>
+                <div *ngIf="errorMessage" class="error-message">
+                  {{ errorMessage }}
+                </div>
+                <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">
+                  Login
+                </button>
+              </form>
+            </mat-card-content>
+          </mat-card>
+      </div>
+  </div>
+</div>

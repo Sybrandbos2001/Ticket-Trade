@@ -1,0 +1,17 @@
+.blue-dot {
+    width: 15px;
+    height: 15px;
+    background-color: #63adf2;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  
+  .landing-phrase {
+    margin-bottom: 5px;
+  }
+  
+  .rounded-img {
+    border-radius: 10px;
+  }
+  

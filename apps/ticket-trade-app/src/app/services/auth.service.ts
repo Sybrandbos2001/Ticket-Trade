@@ -1,20 +1,29 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'https://ticket-trade-api-2023df08f482.herokuapp.com/api/auth'; 
+  private baseUrl = 'http://127.0.0.1:3000/api/auth';
   private jwtHelper = new JwtHelperService();
+  private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated());
+
+  loggedIn$ = this.loggedIn.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+  login(credentials: { email: string; password: string }) {
+    return this.http.post<{ jwt_token: string }>(`${this.baseUrl}/login`, credentials).pipe(
+      tap((response) => {
+        catchError(this.handleError)
+        localStorage.setItem('access_token', response.jwt_token);
+        this.loggedIn.next(true);
+      })
+    );
   }
 
   isAuthenticated(): boolean {
@@ -24,6 +33,20 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('access_token');
-    this.router.navigate(['/login']);
+    this.loggedIn.next(false);
+    this.router.navigate(['/']);
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Er is een fout opgetreden';
+    if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else if (error.status === 404) {
+      errorMessage = 'De gevraagde gegevens konden niet worden gevonden.';
+    } else if (error.status === 500) {
+      errorMessage = 'Interne serverfout, probeer het later opnieuw.';
+    }
+    console.error('Error:', error);
+    return throwError(() => new Error(errorMessage));
   }
 }
