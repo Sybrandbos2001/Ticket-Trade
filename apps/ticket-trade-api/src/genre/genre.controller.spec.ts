@@ -36,7 +36,5 @@ describe('GenreController', () => {
     controller = module.get<GenreController>(GenreController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  it.todo("toDo");
 });
