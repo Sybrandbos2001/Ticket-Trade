@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [],
-    "declaration": true
+    "declaration": true,
   },
   "files": ["src/main.ts", "src/app/app.config.ts"],
   "include": ["src/**/*.d.ts", "src/app/**/*.ts"],

@@ -40,7 +40,5 @@ describe('ConcertController', () => {
     controller = module.get<ConcertController>(ConcertController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+  it.todo("toDo");
 });

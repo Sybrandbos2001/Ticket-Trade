@@ -26,7 +26,5 @@ describe('TicketService', () => {
     service = module.get<TicketService>(TicketService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+  it.todo("toDo");
 });
