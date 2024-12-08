@@ -95,11 +95,11 @@ export class TicketService {
     }
   }
 
-  async scanTicket(userId : string, id: string) {
+  async scanTicket(userId : string, ticketId: string) {
     try {
-      const ticket = await this.ticketModel.findById(id);
+      const ticket = await this.ticketModel.findById(ticketId);
       if(!ticket) {
-        throw new NotFoundException(`Ticket with ID ${id} not found`);
+        throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
       }
       
       if(ticket.userId !== userId) {
@@ -107,11 +107,11 @@ export class TicketService {
       }
 
       if(ticket.used) {
-        throw new ForbiddenException(`Ticket with ID ${id} has already been used`);
+        throw new ForbiddenException(`Ticket with ID ${ticketId} has already been used`);
       }
 
       const updatedTicket = await this.ticketModel.findByIdAndUpdate(
-        id,
+        ticketId,
         {
           used: true,
         },
@@ -121,10 +121,26 @@ export class TicketService {
         },
       );
 
+      this.UpdateEmbeddedTicket(userId, ticketId);
+
       return updatedTicket;
     } catch (error) {
       console.error(error.message);
       throw error;
     }
+  }
+
+  private async UpdateEmbeddedTicket(userId: string, ticketId: string) {
+    const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    const embeddedTicket = user.tickets.find((t) => t._id.toString() === ticketId);
+    if (embeddedTicket) {
+      embeddedTicket.used = true;
+    }
+
+    await user.save();
   }
 }
