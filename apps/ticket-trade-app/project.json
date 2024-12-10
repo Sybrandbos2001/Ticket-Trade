@@ -46,7 +46,13 @@
               "maximumError": "750kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/ticket-trade-app/src/environments/environment.ts",
+              "with": "apps/ticket-trade-app/src/environments/environment.prod.ts"
+            }
+          ]
         },
         "development": {
           "buildOptimizer": false,
