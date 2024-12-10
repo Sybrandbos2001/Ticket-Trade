@@ -1,0 +1,92 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <a routerLink="/tickets" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Ticket <span class="title-blue">Informatie</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Concert</th>
+                                        <th scope="col">Aanvang</th>
+                                        <th scope="col">Einde</th>
+                                        <th scope="col">Prijs</th>
+                                        <th scope="col">Aankoopdatum</th>
+                                        <th scope="col">Gebruikt</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ ticket.concert?.name }}</td>
+                                        <td>{{ ticket.concert?.startDateAndTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                                        <td>{{ ticket.concert?.endDateAndTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                                        <td>€{{ ticket.concert?.price }}</td>
+                                        <td>{{ticket.purchaseDateAndTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                                        <td>{{ ticket.used ? 'Ja' : 'Nee'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h1>Artiest</h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Naam</th>
+                                        <th scope="col">Genre</th>
+                                        <th scope="col">Omschrijving</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ ticket.concert?.artist?.name }}</td>
+                                        <td>{{ ticket.concert?.artist?.genre }}</td>
+                                        <td>{{ ticket.concert?.artist?.description }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h1>Locatie</h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Naam</th>
+                                        <th scope="col">Adres</th>
+                                        <th scope="col">Stad</th>
+                                        <th scope="col">Land</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ ticket.concert?.location?.name }}</td>
+                                        <td>{{ ticket.concert?.location?.street }} {{ ticket.concert?.location?.houseNumber }}, {{ ticket.concert?.location?.postalcode }}</td>
+                                        <td>{{ ticket.concert?.location?.city }}</td>
+                                        <td>{{ ticket.concert?.location?.country }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

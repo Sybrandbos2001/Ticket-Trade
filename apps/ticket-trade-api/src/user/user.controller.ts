@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -21,12 +21,13 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Roles( Role.ADMIN)
-  @Get('id/:id')
-  @ApiOperation({ summary: 'Retrieve single user by ID' })
-  @ApiResponse({ status: 200, description: 'Single user by ID', type: User })
-  async findOne(@Param('id') id: string): Promise<User> {
-    return await this.userService.findOne(id);
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('account')
+  @ApiOperation({ summary: 'Get account' })
+  @ApiResponse({ status: 200, description: 'Get account', type: User })
+  async getUser(@Request() req : IAuthRequest): Promise<User> {
+    const userId = req.user.sub; 
+    return await this.userService.findUserByField('id', userId);
   }
 
   @UseGuards(AuthGuard)
@@ -54,59 +55,10 @@ export class UserController {
     };
   }
 
-  @Get('profile')
-  @ApiOperation({ summary: 'Get profile' })
-  @ApiResponse({ status: 200, description: 'Get profile', type: User })
-  async getProfile(@Request() req : IAuthRequest): Promise<User> {
-    return await this.userService.getProfile(req.user.email);
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @ApiOperation({ summary: 'Follow user by username' })
-  @ApiResponse({ status: 201, description: 'User has been successfully followed' })
-  @Post('follow/:username')
-  async followUser(@Request() req: IAuthRequest, @Param('username') username: string): Promise<object> {
-    const currentUsername = req.user.username; 
-    
-    // Check if user to follow is not the same as the current user
-    if (currentUsername === username) {
-        throw new BadRequestException('You can not follow yourself');
-    }
-
-    // Check if user to follow exists
-    const userToFollow = await this.userService.getProfile(username);
-
-    // Follow user
-    await this.userService.followUser(req.user.sub, userToFollow.id);
-    return {
-      message: 'User has been successfully followed',
-    };
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @Post('unfollow/:username')
-  @ApiOperation({ summary: 'Unfollow user by username' })
-  @ApiResponse({ status: 201, description: 'User has been successfully unfollowed' })
-  async unfollowUser(@Request() req: IAuthRequest, @Param('username') username: string): Promise<object> {
-    
-    // Getting userID of user to unfollow
-    const userToUnFollow = await this.userService.getProfile(username);
-
-    // Follow user
-    await this.userService.unfollowUser(req.user.sub, userToUnFollow.id);
-    return {
-      message: 'User has been successfully unfollowed',
-    };
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @Get('recommendation')
-  @ApiOperation({ summary: 'Get recommendations for users to follow' })
-  @ApiResponse({ status: 200, description: 'User follow recommendations' })
-  async getFollowRecommendations(@Request() req: IAuthRequest): Promise<object> {
-    return await this.userService.getFollowRecommendations(req.user.sub);
+  @Get('profile/:username')
+  @ApiOperation({ summary: 'Retrieve profile by username' })
+  @ApiResponse({ status: 200, description: 'Profile by username', type: User })
+  async findOne(@Param('username') username: string): Promise<User> {
+    return await this.userService.getProfile('username', username);
   }
 }

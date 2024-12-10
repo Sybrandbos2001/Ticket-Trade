@@ -12,6 +12,7 @@ import { TicketModule } from '../ticket/ticket.module';
 import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { Neo4jService } from '../neo4j/neo4j.service';
+import { FriendsModule } from '../friends/friends.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Neo4jService } from '../neo4j/neo4j.service';
     TicketModule,
     UserModule,
     AuthModule,
+    FriendsModule,
   ],
   controllers: [AppController],
   providers: [AppService, Neo4jService],

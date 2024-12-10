@@ -36,6 +36,31 @@
                             </table>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <h1>Concert <span class="title-blue">aanbevelingen</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Concert</th>
+                                        <th scope="col">Vrienden die gaan</th>
+                                        <th scope="col">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let concertRecommendation of concertRecommendations">
+                                        <td>{{ concertRecommendation.concertName }}</td>
+                                        <td>{{ concertRecommendation.attendingFriends.join(', ') }}</td>
+                                        <td>
+                                            <a [routerLink]="['/concert', concertRecommendation.recommendedConcertId]" class="btn detail-btn"><i class="fa-solid fa-eye"></i></a>                                              
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
