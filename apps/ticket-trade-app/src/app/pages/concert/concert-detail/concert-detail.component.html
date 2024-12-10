@@ -7,7 +7,7 @@
             </div>
             <div class="col-12 mt-3">
                 <h1>{{ concert.name }}</h1>
-                <p>{{ concert.artist?.description }}</p>
+                <p>{{ concert.artist?.description }} - Genre: {{ concert.artist?.genre }}</p>
                 <div class="col-12 d-flex mt-4">
                     <i class="fa-solid fa-calendar-days detail-icon"></i>
                     <p class="my-auto">
@@ -33,6 +33,7 @@
                             <button
                             class="btn primary-btn mt-3"
                             type="submit"
+                            (click)="buyTicket()"
                             [disabled]="(isLoggedIn$ | async) === false"
                             *ngIf="(isLoggedIn$ | async) !== false; else loginMessage">
                             Ticket kopen <i class="fa-solid fa-chevron-right"></i>

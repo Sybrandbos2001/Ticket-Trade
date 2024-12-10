@@ -126,25 +126,31 @@ export class ConcertService {
     }
   }
 
-  async getConcertRecommendations(userId: string){
+  async getConcertRecommendations(userId: string) {
     const session = this.neo4jService.getSession();
     const result = await session.run(
-      `MATCH (user:User {id: $userId})-[:FOLLOWS]->(friend:User)-[:ATTENDS]->(concert:Concert)
-       WHERE NOT (user)-[:ATTENDS]->(concert)
-       AND NOT EXISTS {
-         MATCH (user)-[:ATTENDS]->(conflicting:Concert)
-         WHERE conflicting.start < concert.end AND conflicting.end > concert.start
-       }
-       RETURN concert.id AS recommendedConcertId, concert.name AS concertName, COUNT(friend) AS attendingFriendsCount
-       ORDER BY attendingFriendsCount DESC
-       LIMIT 5`,
+      `
+      MATCH (user:User {id: $userId})-[:FOLLOWS]->(friend:User)-[:ATTENDS]->(concert:Concert)
+      WHERE NOT (user)-[:ATTENDS]->(concert)
+        AND NOT EXISTS {
+          MATCH (user)-[:ATTENDS]->(conflicting:Concert)
+          WHERE conflicting.start < concert.end AND conflicting.end > concert.start
+        }
+      RETURN concert.id AS recommendedConcertId,
+             concert.name AS concertName,
+             COUNT(friend) AS attendingFriendsCount,
+             COLLECT(friend.username) AS attendingFriends
+      ORDER BY attendingFriendsCount DESC
+      LIMIT 5
+      `,
       { userId }
     );
   
     return result.records.map(record => ({
       recommendedConcertId: record.get('recommendedConcertId'),
       concertName: record.get('concertName'),
-      attendingFriendsCount: record.get('attendingFriendsCount'),
+      attendingFriendsCount: record.get('attendingFriendsCount').toNumber(),
+      attendingFriends: record.get('attendingFriends'),
     }));
   }
 }

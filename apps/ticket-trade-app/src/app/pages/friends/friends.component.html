@@ -1,0 +1,73 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <a routerLink="/profile" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Vrienden <span class="title-blue">Overzicht</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Naam</th>
+                                        <th scope="col">Achternaam</th>
+                                        <th scope="col">Gebruikersnaam</th>
+                                        <th scope="col">Aantal vrienden</th>
+                                        <th scope="col">Ontvolgen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let friend of friends">
+                                        <td>{{ friend.name }}</td>
+                                        <td>{{ friend.lastname }}</td>
+                                        <td>{{ friend.username }}</td>
+                                        <td>{{ friend.following.length }}</td>
+                                        <td>
+                                            <button (click)="unfollowUser(friend.username)" class="btn create-btn edit-btn delete-btn">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>                                              
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h1>Vriend <span class="title-blue">Aanbevelingen</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Gebruikersnaam</th>
+                                        <th scope="col">Gedeelde vrienden</th>
+                                        <th scope="col">Toevoegen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let friendRecommendation of friendRecommendations">
+                                        <td>{{ friendRecommendation.recommendedUsername }}</td>
+                                        <td>{{ friendRecommendation.mutualFriends.join(', ') }}</td>
+                                        <td>
+                                            <button (click)="followUser(friendRecommendation.recommendedUsername)" class="btn create-btn">
+                                                <i class="fa-solid fa-square-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

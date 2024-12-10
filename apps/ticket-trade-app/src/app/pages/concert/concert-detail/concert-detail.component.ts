@@ -4,9 +4,11 @@ import { NavbarComponent } from '../../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../../shared/footer/footer.component';
 import { IConcert } from '@ticket-trade/domain';
 import { ConcertService } from '../../../services/concert/concert.service';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
+import { TicketService } from '../../../services/ticket/ticket.service';
+import { SweetalertService } from '../../../services/sweetalert/sweetalert.service';
 
 @Component({
   selector: 'app-concert-detail',
@@ -16,40 +18,41 @@ import { AuthService } from '../../../services/auth/auth.service';
   styleUrl: './concert-detail.component.css',
 })
 export class ConcertDetailComponent implements OnInit {
-  
   isLoggedIn$: Observable<boolean>;
   concert: IConcert = {
-  id: '',
-  name: '',
-  price: 0,
-  startDateAndTime: new Date(),
-  endDateAndTime: new Date(),
-  amountTickets: 0,
-  location: {
+    id: '',
     name: '',
-    street: '',
-    houseNumber: '',
-    postalcode: '',
-    country: '',
-    city: '',
-  },
-  locationId: '',
-  artist: {
-    name: '',
-    description: '',
-    genre: {
+    price: 0,
+    startDateAndTime: new Date(),
+    endDateAndTime: new Date(),
+    amountTickets: 0,
+    location: {
       name: '',
+      street: '',
+      houseNumber: '',
+      postalcode: '',
+      country: '',
+      city: '',
     },
-  },
-  artistId: '',
-};
-
+    locationId: '',
+    artist: {
+      name: '',
+      description: '',
+      genre: {
+        name: '',
+      },
+    },
+    artistId: '',
+  };
 
   constructor(
-    private concertService: ConcertService,     
+    private concertService: ConcertService,
     private route: ActivatedRoute,
-    private authService: AuthService
-  ) { 
+    private authService: AuthService,
+    private ticketService: TicketService,
+    private sweetAlertService: SweetalertService,
+    private router: Router
+  ) {
     this.isLoggedIn$ = this.authService.loggedIn$;
   }
 
@@ -62,14 +65,36 @@ export class ConcertDetailComponent implements OnInit {
     }
   }
 
-  getConcert(concertId : string): void {
+  getConcert(concertId: string): void {
     this.concertService.getConcert(concertId).subscribe({
       next: (data) => {
         this.concert = data;
-        console.log('Concerts loaded:', this.concert);
       },
       error: (err) => {
         console.error('Error loading concerts:', err);
+      },
+    });
+  }
+
+  buyTicket(): void {
+    if (!this.concert.id) {
+      console.error('Geen geldige concert gekozen.');
+      return;
+    }
+
+    this.ticketService.buyTicket(this.concert.id).subscribe({
+      next: () => {
+        this.sweetAlertService.success(
+          'Je wordt doorgestuurd naar je ticketoverzich.',
+          'Aankoop succesvol!'
+        );
+        this.router.navigate(['/tickets']);
+      },
+      error: (error: Error) => {
+        this.sweetAlertService.error(
+          'Controleer je invoer.',
+          'Aankoop mislukt!'
+        );
       },
     });
   }
