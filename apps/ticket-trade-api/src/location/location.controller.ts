@@ -25,8 +25,6 @@ export class LocationController {
     };
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve all locations' })
   @ApiResponse({ status: 200, description: 'List of all locations', type: [Location] })
   @Get()
@@ -34,8 +32,6 @@ export class LocationController {
     return await this.locationService.findAll();
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single location by ID' })
   @ApiResponse({ status: 200, description: 'Single location by ID', type: Location })
   @Get('id/:id')

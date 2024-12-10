@@ -4,8 +4,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,8 @@ import { AuthService } from '../../services/auth.service';
     MatFormFieldModule,  
     MatInputModule,      
     MatButtonModule,
+    CommonModule,
+    RouterModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -41,7 +44,7 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.authService.login({ email, password }).subscribe({
         next: () => {
-          // Navigeren naar homepagina bij succes
+          this.router.navigate(['/']);
         },
         error: (error: Error) => {
           this.errorMessage = error.message; // Foutmelding tonen

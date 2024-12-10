@@ -73,7 +73,7 @@
 
 #logout-btn:hover {
   background-color: #f47c7c;
-  color: white;
+  color: white !important;
 }
 
 .dropdown:hover .dropdown-content {

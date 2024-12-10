@@ -1,0 +1,138 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="row">
+                            <div class="col-12 col-md-9">
+                                <h1 class="mb-4">
+                                    <span class="title-blue">TicketTrade</span> de casus
+                                </h1>
+                            </div>
+                            <div class="col-12 col-md-3 info-card">
+                                <h2 class="mb-0 mt-2">Sybrand Bos</h2>
+                                <p>Studentnummer: 2183391</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <p>
+                            TicketTrade is een zelfbedachte casus door Sybrand Bos, student aan de Avans Hogeschool. TicketTrade is een platform waar fans kaartjes kunnen kopen voor concerten van hun favoriete concerten.
+                        </p>
+                        <p>
+                            Naast dat biedt TicketTrade ook een sociaal aspect aan, zo kun je een account registreren op het platform en kun je vrienden volgen die ook een account hebben op het platform. Met dit sociale aspect onderscheidt TicketTrade zich van andere ticket sites.
+                        </p>
+                        <p>
+                            Als je vrienden volgt op het platform krijg je aanbevelingen voor concerten waarvan je vrienden kaartjes hebben, ook kan je vriendschaps aanbevelingen krijgen op basis van je huidige vriendschappen.
+                        </p>
+                    </div>
+                    <div class="col-12 d-none d-lg-flex justify-content-center my-3">
+                        <img src="/img/ERD.png" alt="ERD">
+                    </div>
+                    <div class="col-12 table-responsive">
+                        <table class="table table-striped custom-table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th scope="col">User stories</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1.</td>
+                                    <td>Als gebruiker wil ik een overzicht van concerten zien.</td>
+                                </tr>
+                                <tr>
+                                    <td>2.</td>
+                                    <td>Als gebruiker wil ik een kaartje kunnen kopen voor een concert.</td>
+                                </tr>
+                                <tr>
+                                    <td>3.</td>
+                                    <td>Als gebruiker wil ik een overzicht zien van mijn gekochte kaartjes.</td>
+                                </tr>
+                                <tr>
+                                    <td>4.</td>
+                                    <td>Als gebruiker wil ik vrienden kunnen volgen.</td>
+                                </tr>
+                                <tr>
+                                    <td>5.</td>
+                                    <td>Als gebruiker wil ik aanbevelingen krijgen voor concerten op basis van mijn vriendschappen.</td>
+                                </tr>
+                                <tr>
+                                    <td>6.</td>
+                                    <td>Als gebruiker wil ik aanbevelingen krijgen voor nieuwe vriendschappen.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-12 mt-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">Concert</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>name: string</p>
+                                <p>price: string</p>
+                                <p>startDateAndTime: Date</p>
+                                <p>endDateAndTime: Date</p>
+                                <p>location: Location</p>
+                                <p>artist: Artist</p>
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">User</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>name: string</p>
+                                <p>lastname: string</p>
+                                <p>username: string</p>
+                                <p>phone: string</p>
+                                <p>email: string</p>
+                                <p>password: string</p>
+                                <p>tickets: Ticket[]</p>
+                                <p>following: string[]</p>
+                                <p>role: Role</p>
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">Ticket</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>userId: string</p>
+                                <p>concertId: string</p>
+                                <p>purchaseDateAndTime: Date</p>
+                                <p>used: boolean</p>
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">Artist</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>name: string</p>
+                                <p>description: string</p>
+                                <p>genre: Genre</p>
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">Location</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>street: string</p>
+                                <p>housenumber: string</p>
+                                <p>postalcode: string</p>
+                                <p>country: string</p>
+                                <p>name: string</p>
+                                <p>city: string</p>
+                            </div>
+                            <div class="col-12 col-md-3 text-center">
+                                <h2 class="mb-0 mt-2">Genre</h2>
+                                <hr class="solid">
+                                <p>id: string</p>
+                                <p>name: string</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>
