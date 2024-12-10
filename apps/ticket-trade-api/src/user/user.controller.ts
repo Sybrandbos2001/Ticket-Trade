@@ -54,8 +54,6 @@ export class UserController {
     };
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
   @Get('profile')
   @ApiOperation({ summary: 'Get profile' })
   @ApiResponse({ status: 200, description: 'Get profile', type: User })

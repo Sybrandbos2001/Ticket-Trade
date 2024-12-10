@@ -14,7 +14,10 @@
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.d.ts",
-    "src/app/services/auth.service.ts",
-    "src/app/pages/**/*.ts"
+    "src/app/services/**/*.ts",
+    "src/app/pages/**/*.ts",
+    "src/app/shared/**/*.ts",
+    "src/environments/**/*.ts",
+    "../../libs/**/*.ts"
   ]
 }

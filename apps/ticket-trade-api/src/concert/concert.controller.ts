@@ -25,8 +25,6 @@ export class ConcertController {
     };
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve all concerts' })
   @ApiResponse({ status: 200, description: 'List of all concerts', type: [Concert] })
   @Get()
@@ -34,8 +32,6 @@ export class ConcertController {
     return await this.concertService.findAll();
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single concert by ID' })
   @ApiResponse({ status: 200, description: 'Single concert by ID', type: Concert })
   @Get('id/:id')

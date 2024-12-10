@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../services/auth.service';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,12 +17,19 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./navbar.component.css'],
   providers: [AuthService],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isLoggedIn$: Observable<boolean>;
   public isMenuCollapsed = true;
+  userPayload: any = null;
+  username: string | null = null;
 
   constructor(private authService: AuthService) {
     this.isLoggedIn$ = this.authService.loggedIn$;
+  }
+
+  ngOnInit(): void {
+    this.userPayload = this.authService.getTokenPayload();
+    this.username = this.userPayload?.username || 'Gebruiker'; 
   }
 
   logout(): void {
