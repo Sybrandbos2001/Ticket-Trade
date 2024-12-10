@@ -25,8 +25,6 @@ export class GenreController {
     };
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve all genres' })
   @ApiResponse({ status: 200, description: 'List of all genres', type: [Genre] })
   @Get()
@@ -34,8 +32,6 @@ export class GenreController {
     return await this.genreService.findAll();
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single genre by ID' })
   @ApiResponse({ status: 200, description: 'Single genre by ID', type: Genre })
   @Get('id/:id')

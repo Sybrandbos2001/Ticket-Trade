@@ -26,8 +26,6 @@ export class ArtistController {
     };
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve all Artists' })
   @ApiResponse({ status: 200, description: 'List of all Artists', type: [Artist] })
   @Get()
@@ -35,8 +33,6 @@ export class ArtistController {
     return await this.artistService.findAll();
   }
 
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN, Role.USER)
   @ApiOperation({ summary: 'Retrieve single Artist by ID' })
   @ApiResponse({ status: 200, description: 'Single Artist by ID', type: Artist })
   @Get('id/:id')

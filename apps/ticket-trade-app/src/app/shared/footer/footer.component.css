@@ -1,0 +1,30 @@
+/*Footer*/
+
+.footer-icon {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    font-size: 20px;
+    padding: 8px;
+    margin: 40px 10px 10px 10px;
+  }
+  
+  #footer-copyright {
+    color: #ffffff;
+    font-family: 'Century Gothic', serif;
+    font-size: 18px;
+    margin-bottom: 40px;
+    opacity: 0.5;
+  }
+  
+  #twitter:hover {
+    color: #009ded;
+  }
+  
+  #facebook:hover {
+    color: #4064ac;
+  }
+  
+  footer {
+    background-color: #82a0bc;
+  }

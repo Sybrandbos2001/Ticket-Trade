@@ -3,12 +3,18 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { jwtDecode } from 'jwt-decode';
+import { environment } from '../../../environments/environment';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://127.0.0.1:3000/api/auth';
+  private baseUrl = environment.apiUrl;
   private jwtHelper = new JwtHelperService();
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated());
 
@@ -16,8 +22,13 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(credentials: { email: string; password: string }) {
-    return this.http.post<{ jwt_token: string }>(`${this.baseUrl}/login`, credentials).pipe(
+  register(user: RegisterDto): Observable<any> {
+    console.log('Registering user:', user);
+    return this.http.post(`${this.baseUrl}/auth/register`, user);
+  }
+
+  login(credentials: LoginDto) {
+    return this.http.post<{ jwt_token: string }>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap((response) => {
         catchError(this.handleError)
         localStorage.setItem('access_token', response.jwt_token);
@@ -35,6 +46,19 @@ export class AuthService {
     localStorage.removeItem('access_token');
     this.loggedIn.next(false);
     this.router.navigate(['/']);
+  }
+
+  getTokenPayload(): any | null {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      try {
+        return jwtDecode(token);
+      } catch (error) {
+        console.error('Invalid token', error);
+        return null;
+      }
+    }
+    return null;
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

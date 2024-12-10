@@ -1,0 +1,9 @@
+.info-card {
+    background-color: #63adf2;
+    color: white;
+    border-radius: 4px;
+}
+
+hr.solid {
+    border-top: 3px solid rgb(0, 0, 0);
+}
