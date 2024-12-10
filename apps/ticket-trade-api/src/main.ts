@@ -11,7 +11,10 @@ async function bootstrap() {
 
     // Enable CORS
     app.enableCors({
-      origin: 'http://localhost:4200',
+      origin: [
+        'http://localhost:4200', 
+        'https://ticket-trade-sybrandbos2001-sybrand-bos-projects.vercel.app',
+      ],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true,
     });
