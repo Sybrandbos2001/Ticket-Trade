@@ -85,6 +85,21 @@ export class UserService {
     }
   }
 
+  async getAccount(userId: string) {
+    try {
+      const user = await this.userModel.findById(userId).select('name lastname username phone email -_id');
+  
+      if (!user) {
+        throw new NotFoundException(`User with ${userId} not found`);
+      }
+  
+      return user;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`User with ${userId} not found`);
+    }
+  }
+
   async getProfile(field: 'id' | 'username', value: string) {
     try {
       const query = field === 'id' ? { _id: value } : { username: value };
@@ -98,6 +113,23 @@ export class UserService {
     } catch (error) {
       console.error(error.message);
       throw new NotFoundException(`User with ${field} ${value} not found`);
+    }
+  }
+
+  async getProfileBySearch(search: string) {
+    try {
+      const query = { name: { $regex: search, $options: 'i' } }; // 'i' makes case-insensitive
+  
+      const users = await this.userModel.find(query).select('name lastname username following -_id');
+  
+      if (!users || users.length === 0) {
+        throw new NotFoundException(`No users with name matching "${search}" found`);
+      }
+  
+      return users;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`Error during search for name "${search}": ${error.message}`);
     }
   }
   

@@ -46,6 +46,20 @@ export class FriendService {
     );
   }
 
+  searchProfiles(query : string): Observable<IProfile[]> {
+    const headers = this.authService.getHeaders();
+    return this.http.get<any[]>(`${this.baseUrl}/user/profile/search/${query}`, { headers }).pipe(
+      map((data) => {
+        return data.map((item) => ({
+          name: item.name,
+          lastname: item.lastname, 
+          username: item.username, 
+          following: item.following, 
+        }));
+      })
+    );
+  }
+
   followUser(userName: string): Observable<void> {
     const headers = this.authService.getHeaders();
     return this.http.post<void>(`${this.baseUrl}/friends/follow/${userName}`, {}, { headers });

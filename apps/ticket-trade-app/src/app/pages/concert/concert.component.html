@@ -2,13 +2,16 @@
 <main>
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                 <a routerLink=".." type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-6" *ngIf="userPayload?.role?.includes('admin') === true">
+                <a [routerLink]="['/concert/aanmaken']" class="btn primary-btn secondary-btn create-btn mt-5 float-end"><i class="fa-solid fa-square-plus me-1"></i>Aanmaken</a>                                              
             </div>
             <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
                 <div class="row">
                     <div class="col-12">
-                        <h1>Aankomende <span class="title-blue">concerten</span></h1>
+                        <h1>Huidige <span class="title-blue">concerten</span></h1>
                     </div>
                     <div class="col-12">
                         <div class="col-12 my-5 table-responsive">
@@ -29,36 +32,46 @@
                                         <td>{{ concert.location?.name}}</td>
                                         <td>€{{ concert.price }}</td>
                                         <td>
-                                            <a [routerLink]="['/concert', concert.id]" class="btn detail-btn"><i class="fa-solid fa-eye"></i></a>                                              
+                                            <a [routerLink]="['/concert/id/', concert.id]" class="btn detail-btn"><i class="fa-solid fa-eye"></i></a>                                              
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <h1>Concert <span class="title-blue">aanbevelingen</span></h1>
-                    </div>
-                    <div class="col-12">
-                        <div class="col-12 my-5 table-responsive">
-                            <table class="table table-striped custom-table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Concert</th>
-                                        <th scope="col">Vrienden die gaan</th>
-                                        <th scope="col">Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let concertRecommendation of concertRecommendations">
-                                        <td>{{ concertRecommendation.concertName }}</td>
-                                        <td>{{ concertRecommendation.attendingFriends.join(', ') }}</td>
-                                        <td>
-                                            <a [routerLink]="['/concert', concertRecommendation.recommendedConcertId]" class="btn detail-btn"><i class="fa-solid fa-eye"></i></a>                                              
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="ngcontainer" *ngIf="(isLoggedIn$ | async) === true && userPayload?.role?.includes('admin') === false">
+                        <div class="col-12">
+                            <h1>Concert <span class="title-blue">aanbevelingen</span></h1>
+                        </div>
+                        <div class="col-12">
+                            <div class="col-12 my-5 table-responsive">
+                                <table class="table table-striped custom-table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Concert</th>
+                                            <th scope="col">Vrienden die gaan</th>
+                                            <th scope="col">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <div *ngIf="!concertRecommendations || concertRecommendations.length === 0; else recommendationsTable">
+                                        <p class="mx-2">Geen aanbevelingen op dit moment.</p>
+                                    </div>
+                                      
+                                    <ng-template #recommendationsTable>
+                                        <tbody>
+                                            <tr *ngFor="let concertRecommendation of concertRecommendations">
+                                            <td>{{ concertRecommendation.concertName }}</td>
+                                            <td>{{ concertRecommendation.attendingFriends.join(', ') }}</td>
+                                            <td>
+                                                <a [routerLink]="['/concert', concertRecommendation.recommendedConcertId]" class="btn detail-btn">
+                                                <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                            </td>
+                                            </tr>
+                                        </tbody>
+                                    </ng-template>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

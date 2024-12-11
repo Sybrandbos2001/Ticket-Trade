@@ -7,7 +7,7 @@
             <h1 class="title-white-colored">Registreren</h1>
             <mat-card>
               <mat-card-content>
-                <form id="registerForm" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <form class="formGroup" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                     <mat-form-field appearance="fill">
                       <mat-label>Voornaam</mat-label>
                       <input matInput formControlName="name" type="text" />

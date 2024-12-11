@@ -20,11 +20,6 @@
   color: white;
 }
 
-#loginForm {
-  display: flex;
-  flex-direction: column;
-}
-
 #register-text{
   color: white;
   font-size: 16px;

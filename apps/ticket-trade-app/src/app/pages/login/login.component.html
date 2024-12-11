@@ -7,7 +7,7 @@
           <h1 class="title-white-colored">Inloggen</h1>
           <mat-card>
             <mat-card-content>
-              <form id="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <form class="formGroup" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <mat-form-field appearance="fill">
                   <mat-label>Email</mat-label>
                   <input matInput formControlName="email" type="email" />
