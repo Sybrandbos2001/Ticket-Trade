@@ -9,7 +9,7 @@ import { Neo4jService } from '../neo4j/neo4j.service';
 export class UserService {
   constructor(
   @InjectModel(User.name) private userModel: Model<UserDocument>,
-  private readonly neo4jService: Neo4jService) {}
+  ) {}
 
   async findAll() {
     try {
@@ -19,23 +19,34 @@ export class UserService {
     }
   }
 
-  async findOne(id: string) {
+  async findUserByField(field: 'id' | 'email' | 'username', value: string) {
     try {
-      const user = await this.userModel.findById(id).select('-password -__v');
+      let query;
+  
+      switch (field) {
+        case 'id':
+          query = { _id: value };
+          break;
+        case 'email':
+          query = { email: value };
+          break;
+        case 'username':
+          query = { username: value };
+          break;
+        default:
+          throw new Error(`Invalid field: ${field}`);
+      }
+  
+      const user = await this.userModel.findOne(query);
+  
+      if (!user) {
+        throw new NotFoundException(`User with ${field} ${value} not found`);
+      }
+  
       return user;
     } catch (error) {
       console.error(error.message);
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-  }
-
-  async getFullUser(identifier: string){
-    try {
-      const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
-      return user;
-    } catch (error) {
-      console.error(error.message);
-      throw new NotFoundException(`User with email or ID ${identifier} not found`);
+      throw new NotFoundException(`User with ${field} ${value} not found`);
     }
   }
 
@@ -74,59 +85,52 @@ export class UserService {
     }
   }
 
-  async followUser(currentUserId: string, userId: string) {
-    await this.userModel.updateOne(
-        { _id: currentUserId },
-        { $addToSet: { following: userId } }
-    );
-
-    const session = this.neo4jService.getSession();
-    await session.run(
-      `MATCH (follower:User {id: $currentUserId}), (followee:User {id: $userId})
-      MERGE (follower)-[:FOLLOWS]->(followee)`,
-      { currentUserId, userId },
-    );
-  }
-
-  async unfollowUser(currentUserId: string, userId: string) {
-    await this.userModel.updateOne(
-      { _id: currentUserId },
-      { $pull: { following: userId } }
-    );
-
-    const session = this.neo4jService.getSession();
-    await session.run(
-      `MATCH (follower:User {id: $currentUserId})-[r:FOLLOWS]->(followee:User {id: $userId})
-      DELETE r`,
-      { currentUserId, userId },
-    );
-  }
-
-  async getProfile(identifier: string) {
+  async getAccount(userId: string) {
     try {
-      const user = await this.userModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
+      const user = await this.userModel.findById(userId).select('name lastname username phone email -_id');
+  
+      if (!user) {
+        throw new NotFoundException(`User with ${userId} not found`);
+      }
+  
       return user;
     } catch (error) {
-      console.error('Error in findByEmailOrUsername:', error.message);
+      console.error(error.message);
+      throw new NotFoundException(`User with ${userId} not found`);
     }
   }
 
-  async getFollowRecommendations(userId: string) {
-    const session = this.neo4jService.getSession();
-    const result = await session.run(
-      `MATCH (user:User {id: $userId})-[:FOLLOWS]->(friend:User)-[:FOLLOWS]->(potential:User)
-      WHERE NOT (user)-[:FOLLOWS]->(potential) AND user <> potential
-      RETURN potential.id AS recommendedUserId, potential.username AS recommendedUsername, COUNT(friend) AS mutualFriendCount
-      ORDER BY mutualFriendCount DESC
-      LIMIT 5`,
-      { userId }
-    );
+  async getProfile(field: 'id' | 'username', value: string) {
+    try {
+      const query = field === 'id' ? { _id: value } : { username: value };
+      const user = await this.userModel.findOne(query).select('name lastname username following -_id');
   
-    return result.records.map(record => ({
-      recommendedUserId: record.get('recommendedUserId'),
-      recommendedUsername: record.get('recommendedUsername'),
-      mutualFriendCount: record.get('mutualFriendCount'),
-    }));
+      if (!user) {
+        throw new NotFoundException(`User with ${field} ${value} not found`);
+      }
+  
+      return user;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`User with ${field} ${value} not found`);
+    }
+  }
+
+  async getProfileBySearch(search: string) {
+    try {
+      const query = { name: { $regex: search, $options: 'i' } }; // 'i' makes case-insensitive
+  
+      const users = await this.userModel.find(query).select('name lastname username following -_id');
+  
+      if (!users || users.length === 0) {
+        throw new NotFoundException(`No users with name matching "${search}" found`);
+      }
+  
+      return users;
+    } catch (error) {
+      console.error(error.message);
+      throw new NotFoundException(`Error during search for name "${search}": ${error.message}`);
+    }
   }
   
 }

@@ -30,7 +30,12 @@ a {
 }
 
 textarea {
-    resize: none;
+    resize: none !important;
+}
+
+.formGroup{
+  display: flex;
+  flex-direction: column;
 }
 
 

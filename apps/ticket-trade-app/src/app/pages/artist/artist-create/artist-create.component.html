@@ -1,0 +1,57 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <a [routerLink]="['/artiesten']" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <h1>Artiest <span class="title-blue">Aanmaken</span></h1>
+                    <mat-card>
+                      <mat-card-content>
+                        <form class="formGroup" [formGroup]="artistForm" (ngSubmit)="onSubmit()">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Naam</mat-label>
+                              <input matInput formControlName="name" type="text" />
+                              <mat-error *ngIf="artistForm.get('name')?.invalid && artistForm.get('name')?.touched">
+                                Naam is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Beschrijving</mat-label>
+                              <textarea matInput formControlName="description"></textarea>
+                              <mat-error *ngIf="artistForm.get('description')?.invalid && artistForm.get('description')?.touched">
+                                Beschrijving is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Genre</mat-label>
+                              <mat-select formControlName="genreId">
+                                <mat-option *ngFor="let genre of genres" [value]="genre.id">
+                                  {{ genre.name }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="artistForm.get('genreId')?.invalid && artistForm.get('genreId')?.touched">
+                                Genre is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <div *ngIf="errorMessage" class="error-message">
+                              {{ errorMessage }}
+                            </div>
+                          
+                            <button mat-raised-button color="primary" type="submit" [disabled]="artistForm.invalid">
+                              Aanmaken
+                            </button>
+                          </form>
+                      </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

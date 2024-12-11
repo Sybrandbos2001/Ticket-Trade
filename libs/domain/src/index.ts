@@ -7,3 +7,7 @@ export * from './lib/user.interface';
 export * from './lib/login.interface';
 export * from './lib/role.enum';
 export * from './lib/auth-request.interface';
+export * from './lib/concert-recommendation.interface';
+export * from './lib/profile.interface';
+export * from './lib/friend-recommendation.interface';
+export * from './lib/account.interface';

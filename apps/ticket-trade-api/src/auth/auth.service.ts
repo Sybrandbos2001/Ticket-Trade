@@ -19,7 +19,7 @@ export class AuthService {
       private readonly neo4jService: Neo4jService) {}
 
     async signIn(loginDto : LoginDto): Promise<string> {
-        const user = await this.userService.getFullUser(loginDto.email);
+        const user = await this.userService.findUserByField('email', loginDto.email);
 
         if (!user) {
           throw new NotFoundException(`User with email ${loginDto.email} not found`);
@@ -80,7 +80,7 @@ export class AuthService {
     }
 
     async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
-        const user = await this.userService.getFullUser(email);
+        const user = await this.userService.findUserByField('email', email);
         if (!user) {
           throw new NotFoundException(`User with email ${email} not found`);
         }

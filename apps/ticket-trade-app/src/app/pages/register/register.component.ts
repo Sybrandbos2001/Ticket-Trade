@@ -9,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';  
+import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 
 @Component({
   selector: 'app-register',
@@ -32,7 +33,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) 
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private sweetAlertService: SweetalertService,  ) 
   {
     this.registerForm = this.fb.group(
       {
@@ -46,7 +47,7 @@ export class RegisterComponent {
             Validators.pattern(/^06\d{8}$/),
           ],
         ],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),]],
         password: [
           '',
           [
@@ -70,7 +71,7 @@ export class RegisterComponent {
     } else if (passwordControl?.hasError('minlength')) {
       return 'Wachtwoord moet minimaal 8 tekens lang zijn.';
     } else if (passwordControl?.hasError('pattern')) {
-      return 'Wachtwoord moet minimaal een hoofdletter, een kleine letter, een cijfer en een speciaal teken bevatten.';
+      return 'Minimaal 1 hoofdletter, 1 kleine letter, 1 cijfer en 1 teken.';
     }
     return '';
   }
@@ -88,11 +89,18 @@ export class RegisterComponent {
       registerData.phone = registerData.phone.replace(/^06/, '+31 6');
       this.authService.register(registerData).subscribe({
         next: () => {
+          this.sweetAlertService.success(
+            'Je wordt doorgestuurd naar de inlogpagina.',
+            'Registratie succesvol!'
+          );
           this.router.navigate(['/inloggen']);
         },
         error: (error: Error) => {
-          this.errorMessage = error.message;
-      }},
+          this.sweetAlertService.error(
+            'Controleer je invoer.',
+            'Registratie mislukt!'
+          );
+        }}
       );
     }
   }

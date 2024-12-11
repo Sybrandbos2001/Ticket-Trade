@@ -1,1 +1,46 @@
-<p>ticket works!</p>
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <a routerLink="/profile" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Jouw <span class="title-blue">tickets</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Concert</th>
+                                        <th scope="col">Artiest</th>
+                                        <th scope="col">Datum</th>
+                                        <th scope="col">Locatie</th>
+                                        <th scope="col">Gebruikt</th>
+                                        <th scope="col">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let ticket of tickets">
+                                        <td>{{ ticket.concert?.name }}</td>
+                                        <td>{{ ticket.concert?.artist?.name}}</td>
+                                        <td>{{ ticket.concert?.startDateAndTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+                                        <td>{{ ticket.concert?.location?.name}}</td>
+                                        <td>{{ ticket.used ? 'Ja' : 'Nee' }}</td>
+                                        <td>
+                                            <a [routerLink]="['/ticket', ticket.id]" class="btn detail-btn"><i class="fa-solid fa-eye"></i></a>                                              
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

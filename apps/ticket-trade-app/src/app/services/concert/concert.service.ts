@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { IConcert } from '@ticket-trade/domain';
-import { map, Observable, tap } from 'rxjs';
+import { IConcert, IConcertRecommendation } from '@ticket-trade/domain';
+import { map, Observable } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
+import { CreateConcertDto } from './dto/create-concert.dto';
 
 
 @Injectable({
@@ -11,7 +13,10 @@ import { map, Observable, tap } from 'rxjs';
 export class ConcertService {
   private baseUrl = environment.apiUrl;
   
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
   getConcerts(): Observable<IConcert[]> {
     return this.http.get<any[]>(`${this.baseUrl}/concert`).pipe(
@@ -69,5 +74,24 @@ export class ConcertService {
         artistId: item.artist?._id,
       }))
     );
+  }
+
+  getConcertRecommendations(): Observable<IConcertRecommendation[]> {
+    const headers = this.authService.getHeaders();
+    return this.http.get<any[]>(`${this.baseUrl}/concert/recommendation`, { headers }).pipe(
+      map((data) => {
+        return data.map((item) => ({
+          recommendedConcertId: item.recommendedConcertId,
+          concertName: item.concertName, 
+          attendingFriendsCount: item.attendingFriendsCount, 
+          attendingFriends: item.attendingFriends, 
+        }));
+      })
+    );
+  }
+
+  createConcert(createConcert: CreateConcertDto): Observable<IConcert> {
+    const headers = this.authService.getHeaders();
+    return this.http.post<IConcert>(`${this.baseUrl}/concert`, createConcert, { headers });
   }
 }

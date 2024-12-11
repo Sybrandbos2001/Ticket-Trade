@@ -1,0 +1,78 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <a [routerLink]="['/genres']" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <h1>Location <span class="title-blue">Aanmaken</span></h1>
+                    <mat-card>
+                      <mat-card-content>
+                        <form class="formGroup" [formGroup]="locationForm" (ngSubmit)="onSubmit()">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Naam</mat-label>
+                              <input matInput formControlName="name" type="text" />
+                              <mat-error *ngIf="locationForm.get('name')?.invalid && locationForm.get('name')?.touched">
+                                Naam is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Straat</mat-label>
+                              <input matInput formControlName="street" type="text" />
+                              <mat-error *ngIf="locationForm.get('street')?.invalid && locationForm.get('street')?.touched">
+                                Straat is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Huisnummer</mat-label>
+                              <input matInput formControlName="houseNumber" type="text" />
+                              <mat-error *ngIf="locationForm.get('houseNumber')?.invalid && locationForm.get('houseNumber')?.touched">
+                                Huisnummer is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Postcode</mat-label>
+                              <input matInput formControlName="postalcode" type="text" />
+                              <mat-error *ngIf="locationForm.get('postalcode')?.invalid && locationForm.get('postalcode')?.touched">
+                                Postcode is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Stad</mat-label>
+                              <input matInput formControlName="city" type="text" />
+                              <mat-error *ngIf="locationForm.get('city')?.invalid && locationForm.get('city')?.touched">
+                                Stad is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Land</mat-label>
+                              <input matInput formControlName="country" type="text" />
+                              <mat-error *ngIf="locationForm.get('country')?.invalid && locationForm.get('country')?.touched">
+                                Land is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <div *ngIf="errorMessage" class="error-message">
+                              {{ errorMessage }}
+                            </div>
+                          
+                            <button mat-raised-button color="primary" type="submit" [disabled]="locationForm.invalid">
+                              Aanmaken
+                            </button>
+                          </form>
+                          
+                      </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

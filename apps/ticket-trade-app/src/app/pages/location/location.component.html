@@ -1,1 +1,43 @@
-<p>location works!</p>
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <a [routerLink]="['/admin']" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-6">
+                <a [routerLink]="['/locatie/aanmaken']" class="btn primary-btn secondary-btn create-btn mt-5 float-end"><i class="fa-solid fa-square-plus me-1"></i>Aanmaken</a>                                              
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <h1>Huidige <span class="title-blue">Locaties</span></h1>
+                    </div>
+                    <div class="col-12">
+                        <div class="col-12 my-5 table-responsive">
+                            <table class="table table-striped custom-table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Naam</th>
+                                        <th scope="col">Adres</th>
+                                        <th scope="col">Stad</th>
+                                        <th scope="col">Land</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let location of locations">
+                                        <td>{{ location.name }}</td>
+                                        <td>{{ location.street }} {{ location.houseNumber }}, {{ location.postalcode  }}</td>
+                                        <td>{{ location.city }}</td>
+                                        <td>{{ location.country }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

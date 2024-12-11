@@ -1,0 +1,93 @@
+<app-navbar></app-navbar>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <a [routerLink]="['/artiesten']" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+            </div>
+            <div class="col-12 my-5 p-5 grey-bg boxing-shadow">
+                <div class="row">
+                    <h1>Artiest <span class="title-blue">Aanmaken</span></h1>
+                    <mat-card>
+                      <mat-card-content>
+                        <form class="formGroup" [formGroup]="concertForm" (ngSubmit)="onSubmit()">
+                            <mat-form-field appearance="fill">
+                              <mat-label>Concert Naam</mat-label>
+                              <input matInput formControlName="name" type="text" />
+                              <mat-error *ngIf="concertForm.get('name')?.invalid && concertForm.get('name')?.touched">
+                                Naam is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Prijs</mat-label>
+                              <input matInput formControlName="price" type="number" min="0" />
+                              <mat-error *ngIf="concertForm.get('price')?.invalid && concertForm.get('price')?.touched">
+                                Prijs is verplicht en moet groter dan 0 zijn.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Startdatum en Tijd</mat-label>
+                              <input matInput formControlName="startDateAndTime" type="datetime-local" />
+                              <mat-error *ngIf="concertForm.get('startDateAndTime')?.invalid && concertForm.get('startDateAndTime')?.touched">
+                                Startdatum en tijd zijn verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Einddatum en Tijd</mat-label>
+                              <input matInput formControlName="endDateAndTime" type="datetime-local" />
+                              <mat-error *ngIf="concertForm.get('endDateAndTime')?.invalid && concertForm.get('endDateAndTime')?.touched">
+                                Einddatum en tijd zijn verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Aantal Tickets</mat-label>
+                              <input matInput formControlName="amountTickets" type="number" min="1" />
+                              <mat-error *ngIf="concertForm.get('amountTickets')?.invalid && concertForm.get('amountTickets')?.touched">
+                                Aantal tickets is verplicht en moet minimaal 1 zijn.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Locatie</mat-label>
+                              <mat-select formControlName="locationId">
+                                <mat-option *ngFor="let location of locations" [value]="location.id">
+                                  {{ location.name }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="concertForm.get('locationId')?.invalid && concertForm.get('locationId')?.touched">
+                                Locatie is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <mat-form-field appearance="fill">
+                              <mat-label>Artiest</mat-label>
+                              <mat-select formControlName="artistId">
+                                <mat-option *ngFor="let artist of artists" [value]="artist.id">
+                                  {{ artist.name }}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="concertForm.get('artistId')?.invalid && concertForm.get('artistId')?.touched">
+                                Artiest is verplicht.
+                              </mat-error>
+                            </mat-form-field>
+                          
+                            <div *ngIf="errorMessage" class="error-message">
+                              {{ errorMessage }}
+                            </div>
+                          
+                            <button mat-raised-button color="primary" type="submit" [disabled]="concertForm.invalid">
+                              Aanmaken
+                            </button>
+                          </form>                          
+                      </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

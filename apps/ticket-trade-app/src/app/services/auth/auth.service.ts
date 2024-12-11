@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -7,8 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-
-
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +47,12 @@ export class AuthService {
     this.router.navigate(['/']);
   }
 
+  changePassword(changePasswordDto: ChangePasswordDto): Observable<any> {
+    const headers = this.getHeaders(); 
+    return this.http.patch(`${this.baseUrl}/auth/password`, changePasswordDto, { headers });
+  }
+  
+
   getTokenPayload(): any | null {
     const token = localStorage.getItem('access_token');
     if (token) {
@@ -59,6 +64,18 @@ export class AuthService {
       }
     }
     return null;
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  getHeaders(): HttpHeaders {
+    const jwtToken = this.getToken();
+    return new HttpHeaders({
+      Authorization: `Bearer ${jwtToken}`,
+      'Content-Type': 'application/json',
+    });
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
