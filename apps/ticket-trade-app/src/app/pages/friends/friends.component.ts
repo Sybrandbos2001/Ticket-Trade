@@ -6,23 +6,31 @@ import { IFriendRecommendation, IProfile } from '@ticket-trade/domain';
 import { FriendService } from '../../services/friend/friend.service';
 import { RouterModule } from '@angular/router';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-friends',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, RouterModule],
+  imports: [CommonModule, NavbarComponent, FooterComponent, RouterModule, FormsModule, ReactiveFormsModule],
   templateUrl: './friends.component.html',
   styleUrl: './friends.component.css',
 })
 export class FriendsComponent {
   
   friends: IProfile[] = [];
+  searchForm: FormGroup;
   friendRecommendations: IFriendRecommendation[] = [];
+  searchResults: IProfile[] = [];
 
   constructor(
+    private fb: FormBuilder,
     private friendService: FriendService,
     private sweetAlertService: SweetalertService
-  ) { }
+  ) { 
+    this.searchForm = this.fb.group({
+      searchTerm: [''],
+    });
+  }
 
   ngOnInit(): void {
     this.getFriends();
@@ -56,6 +64,8 @@ export class FriendsComponent {
       next: () => {
         this.getFriends();
         this.getFriendRecommendations();
+        this.searchForm.reset();
+        this.searchResults = [];
         this.sweetAlertService.success(
           'Je volgt nu deze gebruiker',
           'Vriendschap gemaakt!'
@@ -70,7 +80,7 @@ export class FriendsComponent {
   unfollowUser(userName: string): void {
     this.friendService.unfollowUser(userName).subscribe({
       next: () => {
-        this.getFriends();
+        this.friends = this.friends.filter((friend) => friend.username !== userName);
         this.getFriendRecommendations();
         this.sweetAlertService.success(
           'Gebruiker is niet meer je vriend',
@@ -80,6 +90,24 @@ export class FriendsComponent {
       error: (err) => {
         console.error('Error unfollowing user:', err);
       },
+    });
+  }
+
+  onSubmit(): void {
+    const searchTerm = this.searchForm.get('searchTerm')?.value.trim();
+    if (!searchTerm) {
+      this.searchResults = [];
+      return;
+    }
+
+    this.friendService.searchProfiles(searchTerm).subscribe({
+      next: (results) => {
+        this.searchResults = results;
+      },
+      error: (err) => {
+        console.error('Fout bij zoeken naar gebruikers:', err);
+        this.searchResults = [];
+      }
     });
   }
 }

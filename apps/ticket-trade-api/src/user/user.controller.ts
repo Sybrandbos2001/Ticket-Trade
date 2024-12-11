@@ -27,7 +27,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Get account', type: User })
   async getUser(@Request() req : IAuthRequest): Promise<User> {
     const userId = req.user.sub; 
-    return await this.userService.findUserByField('id', userId);
+    return await this.userService.getAccount(userId);
   }
 
   @UseGuards(AuthGuard)
@@ -60,5 +60,12 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Profile by username', type: User })
   async findOne(@Param('username') username: string): Promise<User> {
     return await this.userService.getProfile('username', username);
+  }
+
+  @Get('profile/search/:query')
+  @ApiOperation({ summary: 'Retrieve profiles by query' })
+  @ApiResponse({ status: 200, description: 'Profiles by query', type: [User] })
+  async findBySearch(@Param('query') query: string): Promise<User[]> {
+    return await this.userService.getProfileBySearch(query);
   }
 }

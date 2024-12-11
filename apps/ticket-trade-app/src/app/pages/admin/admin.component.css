@@ -1,0 +1,23 @@
+.button-wrapper {
+    width: 150px;
+    height: 150px;
+    transition: all 0.3s ease-in-out;
+    color: white;
+    border-radius: 4px;
+}
+
+.admin-link:hover {
+    transform: translateY(-4px);
+}
+
+.admin-link:active{
+    border-color: transparent !important;
+}
+
+.button-wrapper i {
+    font-size: 40px;
+}
+
+.admin-btn-bg {
+    background-color: #63adf2;
+}

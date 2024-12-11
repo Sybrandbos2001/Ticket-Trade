@@ -10,3 +10,4 @@ export * from './lib/auth-request.interface';
 export * from './lib/concert-recommendation.interface';
 export * from './lib/profile.interface';
 export * from './lib/friend-recommendation.interface';
+export * from './lib/account.interface';

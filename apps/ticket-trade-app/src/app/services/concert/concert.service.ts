@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { IConcert, IConcertRecommendation } from '@ticket-trade/domain';
 import { map, Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { CreateConcertDto } from './dto/create-concert.dto';
 
 
 @Injectable({
@@ -87,5 +88,10 @@ export class ConcertService {
         }));
       })
     );
+  }
+
+  createConcert(createConcert: CreateConcertDto): Observable<IConcert> {
+    const headers = this.authService.getHeaders();
+    return this.http.post<IConcert>(`${this.baseUrl}/concert`, createConcert, { headers });
   }
 }

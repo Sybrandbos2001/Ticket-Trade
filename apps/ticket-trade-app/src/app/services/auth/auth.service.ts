@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,12 @@ export class AuthService {
     this.loggedIn.next(false);
     this.router.navigate(['/']);
   }
+
+  changePassword(changePasswordDto: ChangePasswordDto): Observable<any> {
+    const headers = this.getHeaders(); 
+    return this.http.patch(`${this.baseUrl}/auth/password`, changePasswordDto, { headers });
+  }
+  
 
   getTokenPayload(): any | null {
     const token = localStorage.getItem('access_token');

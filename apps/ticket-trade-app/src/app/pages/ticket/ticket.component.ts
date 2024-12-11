@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { IConcertRecommendation, ITicket } from '@ticket-trade/domain';
+import { ITicket } from '@ticket-trade/domain';
 import { TicketService } from '../../services/ticket/ticket.service';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
-import { ConcertService } from '../../services/concert/concert.service';
 
 @Component({
   selector: 'app-ticket',
