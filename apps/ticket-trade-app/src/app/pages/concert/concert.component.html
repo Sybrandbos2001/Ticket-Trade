@@ -64,7 +64,7 @@
                                             <td>{{ concertRecommendation.concertName }}</td>
                                             <td>{{ concertRecommendation.attendingFriends.join(', ') }}</td>
                                             <td>
-                                                <a [routerLink]="['/concert', concertRecommendation.recommendedConcertId]" class="btn detail-btn">
+                                                <a [routerLink]="['/concert/id/', concertRecommendation.recommendedConcertId]" class="btn detail-btn">
                                                 <i class="fa-solid fa-eye"></i>
                                                 </a>
                                             </td>

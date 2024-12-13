@@ -73,18 +73,6 @@ export class UserService {
     }
   }
 
-  async remove(id: string) {
-    try {
-      const deletedUser = await this.userModel.findByIdAndDelete(id);
-
-      if (!deletedUser) {
-        throw new NotFoundException(`User with ID ${id} not found`);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   async getAccount(userId: string) {
     try {
       const user = await this.userModel.findById(userId).select('name lastname username phone email -_id');
