@@ -22,14 +22,12 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   register(user: RegisterDto): Observable<any> {
-    console.log('Registering user:', user);
     return this.http.post(`${this.baseUrl}/auth/register`, user);
   }
 
   login(credentials: LoginDto) {
     return this.http.post<{ jwt_token: string }>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap((response) => {
-        catchError(this.handleError)
         localStorage.setItem('access_token', response.jwt_token);
         this.loggedIn.next(true);
       })
@@ -59,7 +57,6 @@ export class AuthService {
       try {
         return jwtDecode(token);
       } catch (error) {
-        console.error('Invalid token', error);
         return null;
       }
     }
@@ -76,18 +73,5 @@ export class AuthService {
       Authorization: `Bearer ${jwtToken}`,
       'Content-Type': 'application/json',
     });
-  }
-
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'Er is een fout opgetreden';
-    if (error.error?.message) {
-      errorMessage = error.error.message;
-    } else if (error.status === 404) {
-      errorMessage = 'De gevraagde gegevens konden niet worden gevonden.';
-    } else if (error.status === 500) {
-      errorMessage = 'Interne serverfout, probeer het later opnieuw.';
-    }
-    console.error('Error:', error);
-    return throwError(() => new Error(errorMessage));
   }
 }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';  
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -76,11 +77,17 @@ export class RegisterComponent {
     return '';
   }
 
-  passwordMatchValidator(form: AbstractControl): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-  
-    return password === confirmPassword ? null : { passwordMismatch: true };
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirmPasswordControl = group.get('confirmPassword');
+    
+    if (password !== confirmPasswordControl?.value) {
+      confirmPasswordControl?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      confirmPasswordControl?.setErrors(null); 
+      return null;
+    }
   }
 
   onSubmit(): void {
@@ -95,13 +102,13 @@ export class RegisterComponent {
           );
           this.router.navigate(['/inloggen']);
         },
-        error: (error: Error) => {
-          this.sweetAlertService.error(
-            'Controleer je invoer.',
-            'Registratie mislukt!'
-          );
-        }}
-      );
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            this.errorMessage = 'Email of gebruikersnaam is al bezet.';
+          } else {
+            this.errorMessage = 'Er is een fout opgetreden. Probeer het later opnieuw.';
+          }
+      }});
     }
   }
 }

@@ -5,6 +5,7 @@ import { FooterComponent } from '../../../shared/footer/footer.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ITicket } from '@ticket-trade/domain';
 import { TicketService } from '../../../services/ticket/ticket.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -46,6 +47,8 @@ export class TicketDetailComponent implements OnInit {
     used: false,
     purchaseDateAndTime: new Date(),
   };
+  errorMessage: string | null = null;
+  ticketNotFound = false;
 
 
   constructor(
@@ -66,10 +69,14 @@ export class TicketDetailComponent implements OnInit {
     this.ticketService.getTicket(ticketId).subscribe({
       next: (data) => {
         this.ticket = data;
-        console.log('Ticket loaded:', this.ticket);
       },
-      error: (err) => {
-        console.error('Error loading tickets:', err);
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.ticketNotFound = true;
+          this.errorMessage = 'Ticket niet gevonden.';
+        } else {
+          this.errorMessage = 'Er is een fout opgetreden.';
+        }
       },
     });
   }
