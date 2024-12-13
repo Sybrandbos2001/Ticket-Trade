@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Request, Get, Body, Patch, Param, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -40,18 +40,6 @@ export class UserController {
     return {
       message: 'User updated successfully',
       user: updatedUser,
-    };
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.USER, Role.ADMIN)
-  @ApiOperation({ summary: 'Delete user' })
-  @ApiResponse({ status: 201, description: 'User deleted successfully' })
-  @Delete()
-  async remove(@Request() req : IAuthRequest): Promise<object> {
-    await this.userService.remove(req.user.sub);
-    return {
-      message: 'User deleted successfully',
     };
   }
 

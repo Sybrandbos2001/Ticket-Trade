@@ -1,6 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Artist, ArtistDocument } from './entities/artist.entity';
 import { Model } from 'mongoose';
@@ -56,39 +55,6 @@ export class ArtistService {
     } catch (error) {
       console.error(error.message);
       throw new NotFoundException(`Artist with ID ${id} not found`);
-    }
-  }
-
-  async update(id: string, updateArtistDto: UpdateArtistDto) {
-    try {
-      const updatedArtist = await this.ArtistModel.findByIdAndUpdate(id, updateArtistDto, {
-        new: true, // Return the updated document
-        runValidators: true, // Validate the update
-      });
-
-      if (!updatedArtist) {
-        throw new NotFoundException(`Artist with ID ${id} not found`);
-      }
-      return updatedArtist.toObject();
-    } catch (error) {
-      console.error(error);
-      if (error.code === 11000) {
-        throw new ConflictException(
-          `Artist with the same ${Object.keys(error.keyValue)[0]} already exists`
-        );
-      }
-    }
-  }
-
-  async remove(id: string) {
-    try {
-      const deletedLocation = await this.ArtistModel.findByIdAndDelete(id);
-
-      if (!deletedLocation) {
-        throw new NotFoundException(`Artist with ID ${id} not found`);
-      }
-    } catch (error) {
-      console.error(error);
     }
   }
 }
