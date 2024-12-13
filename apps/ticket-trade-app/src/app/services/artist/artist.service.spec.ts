@@ -5,6 +5,7 @@ import { AuthService } from '../auth/auth.service';
 import { environment } from '../../../environments/environment';
 import { IArtist } from '@ticket-trade/domain';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { of } from 'rxjs';
 
 describe('ArtistService', () => {
   let service: ArtistService;
@@ -23,13 +24,18 @@ describe('ArtistService', () => {
       _id: '2',
       name: 'Artist 2',
       description: 'Description 2',
-      genre: { name: 'Nederlandstalig' }
+      genre: null
     }
   ];
 
   beforeEach(() => {
     authServiceMock = {
-      getHeaders: jest.fn().mockReturnValue(mockHeaders)
+      getHeaders: jest.fn().mockReturnValue(mockHeaders),
+      loggedIn$: of(true),
+      login: jest.fn(),
+      logout: jest.fn(),
+      isAuthenticated: jest.fn().mockReturnValue(true),
+      getToken: jest.fn().mockReturnValue('mock-token')
     };
 
     TestBed.configureTestingModule({
