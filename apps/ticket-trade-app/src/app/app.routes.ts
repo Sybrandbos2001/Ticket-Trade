@@ -9,7 +9,6 @@ import { ConcertDetailComponent } from './pages/concert/concert-detail/concert-d
 import { RegisterComponent } from './pages/register/register.component';
 import { TicketComponent } from './pages/ticket/ticket.component';
 import { TicketDetailComponent } from './pages/ticket/ticket-detail/ticket-detail.component';
-import { AccountComponent } from './pages/account/account.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FriendsComponent } from './pages/friends/friends.component';
 import { AdminComponent } from './pages/admin/admin.component';
@@ -23,6 +22,7 @@ import { LocationCreateComponent } from './pages/location/location-create/locati
 import { ArtistComponent } from './pages/artist/artist.component';
 import { ArtistCreateComponent } from './pages/artist/artist-create/artist-create.component';
 import { ConcertCreateComponent } from './pages/concert/concert-create/concert-create.component';
+import { AccountComponent } from './pages/account/account.component';
 
 export const appRoutes: Route[] = [
     { path: '', component: LandingComponent }, 
