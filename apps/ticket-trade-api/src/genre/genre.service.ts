@@ -16,7 +16,6 @@ export class GenreService {
       await newGenre.save();
       return newGenre.toObject();
     } catch (error) {
-      console.error(error);
       if (error.code === 11000) {
         // Duplicate key error (E11000)
         throw new ConflictException(
@@ -40,7 +39,6 @@ export class GenreService {
       const user = await this.GenreModel.findById(id);
       return user;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`Genre with ID ${id} not found`);
     }
   }

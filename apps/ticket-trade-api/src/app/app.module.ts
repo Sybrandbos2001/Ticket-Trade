@@ -11,6 +11,8 @@ import { UserModule } from '../user/user.module';
 import { AuthModule } from '../auth/auth.module';
 import { Neo4jService } from '../neo4j/neo4j.service';
 import { FriendsModule } from '../friends/friends.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { FriendsModule } from '../friends/friends.module';
     AuthModule,
     FriendsModule,
   ],
-  controllers: [],
-  providers: [Neo4jService],
+  controllers: [AppController],
+  providers: [AppService, Neo4jService],
 })
 export class AppModule {}
