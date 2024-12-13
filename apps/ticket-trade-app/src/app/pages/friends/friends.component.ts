@@ -67,7 +67,7 @@ export class FriendsComponent {
         this.searchForm.reset();
         this.searchResults = [];
         this.sweetAlertService.success(
-          'Je volgt nu deze gebruiker',
+          'Je volgt nu deze gebruiker.',
           'Vriendschap gemaakt!'
         );
       },
@@ -83,7 +83,7 @@ export class FriendsComponent {
         this.friends = this.friends.filter((friend) => friend.username !== userName);
         this.getFriendRecommendations();
         this.sweetAlertService.success(
-          'Gebruiker is niet meer je vriend',
+          'Gebruiker is niet meer je vriend.',
           'Vriendschap verbroken!'
         );
       },

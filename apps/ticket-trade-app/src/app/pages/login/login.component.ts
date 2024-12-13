@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -46,8 +47,14 @@ export class LoginComponent {
         next: () => {
           this.router.navigate(['/']);
         },
-        error: (error: Error) => {
-          this.errorMessage = error.message; // Foutmelding tonen
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            this.errorMessage = 'Het ingevoerde e-mailadres bestaat niet.';
+          } else if (error.status === 401) {
+            this.errorMessage = 'Het wachtwoord is onjuist.';
+          } else {
+            this.errorMessage = 'Er is een fout opgetreden. Probeer het later opnieuw.';
+          }
       }},
       );
     }

@@ -91,7 +91,7 @@ export class TicketService {
       return ticket;
     } catch (error) {
       console.error(error.message);
-      throw error;
+      throw new NotFoundException(`Ticket with ID ${id} not found`);
     }
   }
 

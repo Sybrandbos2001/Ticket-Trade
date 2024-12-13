@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { SweetalertService } from '../../services/sweetalert/sweetalert.service';
 import { MatDivider } from '@angular/material/divider';
 import { ChangePasswordDto } from '../../services/auth/dto/change-password.dto';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-change-password',
@@ -66,12 +67,22 @@ export class ChangePasswordComponent {
     }
     return '';
   }
+
+  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const newPassword = group.get('newPassword')?.value;
+    const confirmNewPasswordControl = group.get('confirmNewPassword');
   
-  passwordMatchValidator(form: AbstractControl): { [key: string]: boolean } | null {
-    const newPassword = form.get('newPassword')?.value;
-    const confirmNewPassword = form.get('confirmNewPassword')?.value;
+    if (!confirmNewPasswordControl) return null;
   
-    return newPassword === confirmNewPassword ? null : { passwordMismatch: true };
+    if (!confirmNewPasswordControl.value) {
+      confirmNewPasswordControl.setErrors({ required: true });
+    } else if (newPassword !== confirmNewPasswordControl.value) {
+      confirmNewPasswordControl.setErrors({ passwordMismatch: true });
+    } else {
+      confirmNewPasswordControl.setErrors(null); 
+    }
+  
+    return null;
   }
 
   onSubmit(): void {
@@ -82,17 +93,18 @@ export class ChangePasswordComponent {
       this.authService.changePassword(changePasswordDto).subscribe({
         next: () => {
           this.sweetAlertService.success(
-            'Je wachtwoord is succesvol gewijzigd!',
-            'Succes!'
+            'Je kunt nu inloggen.',
+            'Gelukt!'
           );
           this.authService.logout();
           this.router.navigate(['/inloggen']);
         },
-        error: (error: Error) => {
-          this.sweetAlertService.error(
-            'Er is iets misgegaan. Controleer je invoer.',
-            'Wachtwoord wijzigen mislukt!'
-          );
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.errorMessage = 'Huidig wachtwoord is onjuist.';
+          } else {
+            this.errorMessage = 'Er is een fout opgetreden. Probeer het later opnieuw.';
+          }
         },
       });
     }

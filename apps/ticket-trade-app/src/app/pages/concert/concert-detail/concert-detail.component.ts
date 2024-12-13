@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.service';
 import { TicketService } from '../../../services/ticket/ticket.service';
 import { SweetalertService } from '../../../services/sweetalert/sweetalert.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-concert-detail',
@@ -44,6 +45,8 @@ export class ConcertDetailComponent implements OnInit {
     },
     artistId: '',
   };
+  errorMessage: string | null = null;
+  concertNotFound = false;
 
   constructor(
     private concertService: ConcertService,
@@ -70,8 +73,13 @@ export class ConcertDetailComponent implements OnInit {
       next: (data) => {
         this.concert = data;
       },
-      error: (err) => {
-        console.error('Error loading concerts:', err);
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.concertNotFound = true;
+          this.errorMessage = 'Concert niet gevonden.';
+        } else {
+          this.errorMessage = 'Er is een fout opgetreden.';
+        }
       },
     });
   }
@@ -85,7 +93,7 @@ export class ConcertDetailComponent implements OnInit {
     this.ticketService.buyTicket(this.concert.id).subscribe({
       next: () => {
         this.sweetAlertService.success(
-          'Je wordt doorgestuurd naar je ticketoverzich.',
+          'Je wordt doorgestuurd naar je ticketoverzicht.',
           'Aankoop succesvol!'
         );
         this.router.navigate(['/tickets']);
