@@ -1,7 +1,6 @@
 import { Controller, Request, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ConcertService } from './concert.service';
 import { CreateConcertDto } from './dto/create-concert.dto';
-import { UpdateConcertDto } from './dto/update-concert.dto';
 import { Roles } from '../auth/roles.decorator';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
@@ -37,31 +36,6 @@ export class ConcertController {
   @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.concertService.findOne(id);
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Update Concert' })
-  @ApiResponse({ status: 201, description: 'Concert updated successfully', type: Concert })
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateconcertDto: UpdateConcertDto) : Promise<object> {
-    const updatedconcert = await this.concertService.update(id, updateconcertDto);
-    return {
-      message: 'Concert updated successfully',
-      concert: updatedconcert,
-    };
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Delete concert' })
-  @ApiResponse({ status: 201, description: 'Concert deleted successfully' })
-  @Delete(':id')
-  async remove(@Param('id') id: string) : Promise<object> {
-    await this.concertService.remove(id);
-    return {
-      message: 'Concert deleted successfully',
-    };
   }
 
   @UseGuards(AuthGuard)

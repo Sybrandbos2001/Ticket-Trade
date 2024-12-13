@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
-import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Roles } from '../auth/roles.decorator';
 import { AuthGuard } from '../auth/auth.guard';
 import { Role } from '@ticket-trade/domain';
@@ -38,30 +37,5 @@ export class ArtistController {
   @Get('id/:id')
   findOne(@Param('id') id: string) {
     return this.artistService.findOne(id);
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Update Artist' })
-  @ApiResponse({ status: 201, description: 'Artist updated successfully', type: Artist })
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateArtistDto: UpdateArtistDto) : Promise<object> {
-    const updatedArtist = await this.artistService.update(id, updateArtistDto);
-    return {
-      message: 'Artist updated successfully',
-      Artist: updatedArtist,
-    };
-  }
-
-  @UseGuards(AuthGuard)
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Delete Artist' })
-  @ApiResponse({ status: 201, description: 'Artist deleted successfully' })
-  @Delete(':id')
-  async remove(@Param('id') id: string) : Promise<object> {
-    await this.artistService.remove(id);
-    return {
-      message: 'Artist deleted successfully',
-    };
   }
 }

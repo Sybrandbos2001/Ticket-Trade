@@ -1,6 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateConcertDto } from './dto/create-concert.dto';
-import { UpdateConcertDto } from './dto/update-concert.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Concert, ConcertDocument } from './entities/concert.entity';
@@ -67,62 +66,6 @@ export class ConcertService {
     } catch (error) {
       console.error(error.message);
       throw new NotFoundException(`Concert with ID ${id} not found`);
-    }
-  }
-
-  async update(id: string, updateConcertDto: UpdateConcertDto) {
-    try {
-      const { artistId, locationId, ...concertData } = updateConcertDto;
-  
-      const artist = await this.artistModel.findById(artistId).exec();
-      if (!artist) {
-        throw new NotFoundException(`Artist with ID ${artistId} not found`);
-      }
-  
-      const location = await this.locationModel.findById(locationId).exec();
-      if (!location) {
-        throw new NotFoundException(`Location with ID ${locationId} not found`);
-      }
-  
-      const updatedConcert = await this.concertModel.findByIdAndUpdate(
-        id,
-        {
-          ...concertData,
-          artist, 
-          location, 
-        },
-        {
-          new: true, // Return the updated document
-          runValidators: true, // Validate the update
-        },
-      );
-  
-      if (!updatedConcert) {
-        throw new NotFoundException(`Concert with ID ${id} not found`);
-      }
-  
-      return updatedConcert.toObject();
-    } catch (error) {
-      console.error(error);
-  
-      if (error.code === 11000) {
-        throw new ConflictException(
-          `Concert with the same ${Object.keys(error.keyValue)[0]} already exists`
-        );
-      }
-      throw error;
-    }
-  }
-
-  async remove(id: string) {
-    try {
-      const deletedConcert = await this.concertModel.findByIdAndDelete(id);
-
-      if (!deletedConcert) {
-        throw new NotFoundException(`Concert with ID ${id} not found`);
-      }
-    } catch (error) {
-      console.error(error);
     }
   }
 
