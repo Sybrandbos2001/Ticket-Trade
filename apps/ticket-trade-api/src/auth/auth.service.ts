@@ -68,8 +68,6 @@ export class AuthService {
           const { password, ...userWithoutPassword } = newUser.toObject();
           return userWithoutPassword;
         } catch (error) {
-          console.error(error);
-    
           if (error.code === 11000) {
             // Duplicate key error (E11000)
             throw new ConflictException(

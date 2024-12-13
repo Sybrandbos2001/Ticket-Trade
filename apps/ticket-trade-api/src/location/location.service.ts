@@ -16,7 +16,6 @@ export class LocationService {
       await newLocation.save();
       return newLocation.toObject();
     } catch (error) {
-      console.error(error);
       if (error.code === 11000) {
         // Duplicate key error (E11000)
         throw new ConflictException(
@@ -40,7 +39,6 @@ export class LocationService {
       const location = await this.locationModel.findById(id);
       return location;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`Location with ID ${id} not found`);
     }
   }

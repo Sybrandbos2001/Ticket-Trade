@@ -45,7 +45,6 @@ export class UserService {
   
       return user;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`User with ${field} ${value} not found`);
     }
   }
@@ -64,7 +63,6 @@ export class UserService {
       const { password, ...userWithoutPassword } = updatedUser.toObject();
       return userWithoutPassword;
     } catch (error) {
-      console.error(error);
       if (error.code === 11000) {
         throw new ConflictException(
           `User with the same ${Object.keys(error.keyValue)[0]} already exists`
@@ -83,7 +81,6 @@ export class UserService {
   
       return user;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`User with ${userId} not found`);
     }
   }
@@ -99,7 +96,6 @@ export class UserService {
   
       return user;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`User with ${field} ${value} not found`);
     }
   }
@@ -116,7 +112,6 @@ export class UserService {
   
       return users;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`Error during search for name "${search}": ${error.message}`);
     }
   }
