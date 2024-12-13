@@ -3,7 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <a routerLink=".." type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+                <a *ngIf="userPayload?.role?.includes('admin') === false" routerLink="/" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+                <a *ngIf="userPayload?.role?.includes('admin') === true" routerLink="/admin" type="button" class="btn primary-btn secondary-btn mt-5"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
             </div>
             <div class="col-6" *ngIf="userPayload?.role?.includes('admin') === true">
                 <a [routerLink]="['/concert/aanmaken']" class="btn primary-btn secondary-btn create-btn mt-5 float-end"><i class="fa-solid fa-square-plus me-1"></i>Aanmaken</a>                                              

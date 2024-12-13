@@ -9,8 +9,11 @@
         <li class="nav-item custom-link active">
           <a class="nav-link" routerLink="/" (click)="isMenuCollapsed = true">Home</a>
         </li>
-        <li class="nav-item custom-link">
+        <li class="nav-item custom-link" *ngIf="!userPayload || !userPayload?.role?.includes('admin')">
           <a class="nav-link" routerLink="/concerten" (click)="isMenuCollapsed = true">Concerten</a>
+        </li>
+        <li class="nav-item custom-link" *ngIf="userPayload?.role?.includes('admin') === true">
+          <a class="nav-link" routerLink="/admin" (click)="isMenuCollapsed = true">Admin</a>
         </li>
         <li class="nav-item custom-link">
           <a class="nav-link" routerLink="/over" (click)="isMenuCollapsed = true">Over</a>
@@ -29,7 +32,6 @@
         <div class="dropdown">
           <button class="dropbtn"><i class="fa-solid fa-user mx-2"></i>{{ username }}</button>
           <div class="dropdown-content text-center">
-            <a *ngIf="userPayload?.role?.includes('admin')" routerLink="/admin">Admin</a>
             <a routerLink="/account">Account</a>
             <a routerLink="/tickets">Tickets</a>
             <a routerLink="/vrienden">Vrienden</a>

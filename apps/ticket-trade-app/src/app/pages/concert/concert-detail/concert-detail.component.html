@@ -1,58 +1,63 @@
 <app-navbar></app-navbar>
 <main>
-    <div class="container my-5 p-5 grey-bg boxing-shadow">
-        <div class="row">
-            <div class="col-12">
-                <img class="img-fluid rounded mb-5 mb-lg-0" src="/img/Concert-detail.jpg" alt="concert-img" />
-            </div>
-            <div class="col-12 mt-3">
-                <h1>{{ concert.name }}</h1>
-                <p>{{ concert.artist?.description }} - Genre: {{ concert.artist?.genre }}</p>
-                <div class="col-12 d-flex mt-4">
-                    <i class="fa-solid fa-calendar-days detail-icon"></i>
-                    <p class="my-auto">
-                        <span class="bold-text">Datum:</span> {{ concert.startDateAndTime | date: 'dd/MM/yyyy HH:mm' }}
-                    </p>
+    <ng-container *ngIf="!concertNotFound; else notFoundTemplate">
+        <div class="container my-5 p-5 grey-bg boxing-shadow">
+            <div class="row">
+                <div class="col-12">
+                    <img class="img-fluid rounded mb-5 mb-lg-0" src="/img/Concert-detail.jpg" alt="concert-img" />
                 </div>
-                <div class="col-12 d-flex mt-4">
-                    <i class="fa-solid fa-location-dot detail-icon"></i>
-                    <p class="my-auto">
-                        <span class="bold-text">Locatie:</span> {{ concert.location?.name }}
-                    </p>
-                </div>
-                <div class="col-12 d-flex mt-4">
-                    <i class="fa-solid fa-euro-sign detail-icon"></i>
-                    <p class="my-auto">
-                        <span class="bold-text">Prijs:</span> {{ concert.price }}
-                    </p>
-                </div>
-                <div class="col-12 mt-5">
-                    <div class="row">
-                        <div class="col-12 mx-auto mb-3 flex-xl-row flex-column d-flex justify-content-between">
-                            <a routerLink="/concerten" class="btn primary-btn secondary-btn mt-3"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
-                            <button
-                            class="btn primary-btn mt-3"
-                            type="submit"
-                            (click)="buyTicket()"
-                            [disabled]="(isLoggedIn$ | async) === false"
-                            *ngIf="(isLoggedIn$ | async) !== false; else loginMessage">
-                            Ticket kopen <i class="fa-solid fa-chevron-right"></i>
-                            </button>
-
-                            <ng-template #loginMessage>
-                            <button
-                                class="btn disabled-btn mt-3"
-                                type="button"
-                                disabled
-                            >Je moet ingelogd zijn om een ticket te kopen
-                            </button>
-                            </ng-template>
-
+                <div class="col-12 mt-3">
+                    <h1>{{ concert.name }}</h1>
+                    <p>{{ concert.artist?.description }} - Genre: {{ concert.artist?.genre }}</p>
+                    <div class="col-12 d-flex mt-4">
+                        <i class="fa-solid fa-calendar-days detail-icon"></i>
+                        <p class="my-auto">
+                            <span class="bold-text">Datum:</span> {{ concert.startDateAndTime | date: 'dd/MM/yyyy HH:mm' }}
+                        </p>
+                    </div>
+                    <div class="col-12 d-flex mt-4">
+                        <i class="fa-solid fa-location-dot detail-icon"></i>
+                        <p class="my-auto">
+                            <span class="bold-text">Locatie:</span> {{ concert.location?.name }}
+                        </p>
+                    </div>
+                    <div class="col-12 d-flex mt-4">
+                        <i class="fa-solid fa-euro-sign detail-icon"></i>
+                        <p class="my-auto">
+                            <span class="bold-text">Prijs:</span> {{ concert.price }}
+                        </p>
+                    </div>
+                    <div class="col-12 mt-5">
+                        <div class="row">
+                            <div class="col-12 mx-auto mb-3 flex-xl-row flex-column d-flex justify-content-between">
+                                <a routerLink="/concerten" class="btn primary-btn secondary-btn mt-3"><i class="fa-solid fa-chevron-left"></i> Ga terug</a>
+                                <button
+                                class="btn primary-btn mt-3"
+                                type="submit"
+                                (click)="buyTicket()"
+                                [disabled]="(isLoggedIn$ | async) === false"
+                                *ngIf="(isLoggedIn$ | async) !== false; else loginMessage">
+                                Ticket kopen <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+    
+                                <ng-template #loginMessage>
+                                <button
+                                    class="btn disabled-btn mt-3"
+                                    type="button"
+                                    disabled
+                                >Je moet ingelogd zijn om een ticket te kopen
+                                </button>
+                                </ng-template>
+    
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </ng-container>
+    <ng-template #notFoundTemplate>
+        <h1 class="text-center mt-5">{{ errorMessage }}</h1>
+    </ng-template>
 </main>
 <app-footer></app-footer>

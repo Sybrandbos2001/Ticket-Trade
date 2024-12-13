@@ -88,7 +88,7 @@ export class ConcertCreateComponent implements OnInit {
         error: (err) => {
           console.error('Fout bij aanmaken van concert:', err);
           this.sweetAlertService.error(
-            'Er is iets misgegaan. Probeer het opnieuw.',
+            'Er is iets misgegaan. Controleer je invoer.',
             'Fout!'
           );
         },
