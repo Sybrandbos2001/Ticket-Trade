@@ -50,10 +50,9 @@ export class ArtistService {
 
   async findOne(id: string) {
     try {
-      const user = await this.ArtistModel.findById(id);
-      return user;
+      const artist = await this.ArtistModel.findById(id);
+      return artist;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`Artist with ID ${id} not found`);
     }
   }

@@ -90,13 +90,11 @@ export class TicketService {
       }
       return ticket;
     } catch (error) {
-      console.error(error.message);
       throw new NotFoundException(`Ticket with ID ${id} not found`);
     }
   }
 
   async scanTicket(userId : string, ticketId: string) {
-    try {
       const ticket = await this.ticketModel.findById(ticketId);
       if(!ticket) {
         throw new NotFoundException(`Ticket with ID ${ticketId} not found`);
@@ -124,11 +122,7 @@ export class TicketService {
       this.UpdateEmbeddedTicket(userId, ticketId);
 
       return updatedTicket;
-    } catch (error) {
-      console.error(error.message);
-      throw error;
     }
-  }
 
   private async UpdateEmbeddedTicket(userId: string, ticketId: string) {
     const user = await this.userModel.findById(userId);
